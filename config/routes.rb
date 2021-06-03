@@ -6,4 +6,9 @@ Rails.application.routes.draw do
   post 'assets', to: 'assets#create'
   patch 'assets', to: 'assets#update'
 
+
+  resources :users do
+    resources :expenses, only: [:index, :create, :destroy]
+  end
+
 end
