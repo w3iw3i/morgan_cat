@@ -5,4 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :expenses, dependent: :destroy
+
+  def self.sample_data
+  end
 end
