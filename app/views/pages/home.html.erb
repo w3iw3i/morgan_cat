@@ -3,5 +3,17 @@
 
 <p>Take the first step to building your FREE financial plan</p>
 
-
-<%= link_to "View Projection", projection_path, class: 'btn btn-primary' %>
+<%= simple_form_for(@user, method: :post, url: projection_path) do |f| %>
+  <div class="flexbox-class">
+    <div class="mr-3">
+      <%= f.input :dob, label: 'Please select your birth year', collection: @start_year..@end_year %>
+    </div>
+    <div class="mr-3">
+      <%= f.input :monthly_income, label: 'Please input your monthly income' %>
+    </div>
+    <div class="mr-3">
+      <%= f.input :monthly_expenses, label: 'Please input your monthly expenses' %>
+    </div>
+    <%= f.submit 'View Projection', class: 'btn btn-primary' %>
+  </div>
+<% end %>
