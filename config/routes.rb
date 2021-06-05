@@ -3,13 +3,14 @@ Rails.application.routes.draw do
   root to: 'pages#home'
   get 'projection', to: 'pages#projection'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  get 'assets', to: 'assets#index'
+  get 'assets', to: 'assets#index', as: :assets
   post 'assets', to: 'assets#create'
   patch 'assets', to: 'assets#update'
 
 
   resources :users do
     resources :expenses, only: [:index, :create, :destroy]
+    resources :assets, only: [:index, :create, :update]
   end
 
 end
