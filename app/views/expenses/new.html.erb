@@ -1,0 +1,6 @@
+<%= simple_form_for(@user, Expense.new) do |f| %>
+  <%= f.input :expense_type %>
+  <%= f.input :year %>
+  <%= f.input :amount %>
+  <%= f.submit %>
+<% end %>
