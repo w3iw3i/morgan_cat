@@ -36,7 +36,8 @@ gem 'simple_form'
 gem 'chartkick'
 gem 'highcharts-rails'
 gem 'groupdate'
-group :development, :test do  gem 'pry-byebug'
+group :development, :test do  
+  gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
 
