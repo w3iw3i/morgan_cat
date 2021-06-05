@@ -12,6 +12,9 @@ class ExpensesController < ApplicationController
 
   def create
     @expense = Expense.new(expense_params)
+    years_to_compound =  @expense.year_int - Time.now.year
+    inflation = 0.02
+    @expense.inflated_amt =  @expense.amount*(1+inflation)**(years_to_compound)
     @expense.user = current_user
     @expense.save
 
@@ -25,7 +28,10 @@ class ExpensesController < ApplicationController
     redirect_to user_expenses_path(current_user)
   end
 
+private
+
   def expense_params
     params.require("/users/#{current_user.id}/expenses").permit(:expense_type, :amount, :year_int)
   end
 end
+

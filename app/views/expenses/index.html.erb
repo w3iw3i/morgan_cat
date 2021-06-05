@@ -3,11 +3,10 @@
 <div class="expense-entry">
 
   <%= simple_form_for(user_expenses_path, html: {class: 'form-inline', width: '100%'}) do |f| %>
-
-    <%= f.input :expense_type, label: 'Expense Type: ', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Car', 'Wedding', 'Home Downpayment', 'Home Renovation', 'University - Child'] %>
-    <%= f.input :year_int, label: 'Year: ', :input_html => {:style=> 'width: 100%'}, collection: 2020..2080, :required => false%>
-    <%= f.input :amount, label: 'Amount ($): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
-    <%= f.button :submit, "Submit",class: "btn btn-secondary", id:"submit-expenses"%>
+    <%= f.input :expense_type, label: 'Expense Type: ', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Car', 'Wedding', 'House - Downpayment', 'House - Renovation', 'Child - Birth', 'Child - Education', 'Education', 'Business', 'Other'] %>
+    <%= f.input :year_int, label: 'Year: ', :input_html => {:style=> 'width: 100%'}, collection: 2021..2080, :required => false%>
+    <%= f.input :amount, label: 'Present-Day Expense ($): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+    <%= f.button :submit, "Add Expense",class: "btn btn-secondary", id:"submit-expenses"%>
   <% end %>
 
 </div>
@@ -16,11 +15,15 @@
 <h2>List of Expenses</h2>
 
 <table id="expense-table">
+  <col style="width:35%">
+	<col style="width:15%">
+	<col style="width:25%">
+  <col style="width:25%">
   <tr>
     <th>Expense Type</th>
     <th>Year</th>
-    <th>Amount ($)</th>
-
+    <th>Present-Day Expense ($)</th>
+    <th>Inflation Adjusted Expense ($)</th>
   </tr>
 
   <% sorted = current_user.expenses.sort {|a,b| a.year_int <=> b.year_int}
@@ -30,6 +33,7 @@
       <td><%= expense.expense_type %></td>
       <td><%= expense.year_int %></td>
       <td><%= number_to_currency(expense.amount, unit: '$', separator: ",", precision: 0) %></td>
+      <td><%= number_to_currency(expense.inflated_amt, unit: '$', separator: ",", precision: 0) %></td>
       <td><%= link_to "Remove",
                   user_expense_path(expense.user_id, expense.id),
                   method: :delete,
