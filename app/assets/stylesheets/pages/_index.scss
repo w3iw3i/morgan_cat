@@ -1,2 +1,48 @@
 // Import page-specific CSS files here.
 @import "home";
+
+.expense-entry {
+  padding: 10px;
+  border-color: #04AA6D !important;
+  border:solid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.container {
+  padding:0px !important;
+}
+
+.simple_form {
+  justify-content: space-evenly;
+}
+
+#submit-expenses {
+  position: relative;
+  width: 20%;
+  top: 11px;
+}
+
+#expense-table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#expense-table td, #expense-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#expense-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#expense-table tr:hover {background-color: #ddd;}
+
+#expense-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+
