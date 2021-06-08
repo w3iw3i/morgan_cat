@@ -1,6 +1,35 @@
 
-<%= column_chart @projected_amt,
-    title: 'Asset Projection',
+<% expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) %>
+
+<%  data = [
+  {
+    name: "Cash",
+    data: @projected_amt
+  },
+  {
+    name: "Stocks",
+    data: [["2010", 24], ["2020", 22], ["2030", 19]]
+  },
+  {
+    name: "Bonds",
+    data: [["2010", 20], ["2020", 23], ["2030", 29]]
+  }
+]
+%>
+
+<%=
+
+    # integrate expenses into projection
+    expenses.to_a.each do |expense|
+      data.first[:data].each do |cash|
+        if expense[:year_int].to_s == cash[0]
+          cash[1] -= expense[:inflated_amt]
+        end
+      end
+    end
+
+    column_chart data,
+    title: 'Asset Projection', stacked:true,
     library: {
       yAxis: {
            labels: {
@@ -12,7 +41,7 @@
             xDateFormat: '%B',
             valuePrefix: '$'
           }
-        } 
+        }
 %>
 
 <%= link_to "Back to Home", root_path, class: 'btn btn-primary' %>
