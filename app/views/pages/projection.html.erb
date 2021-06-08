@@ -4,7 +4,7 @@
 <%  data = [
   {
     name: "Cash",
-    data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+    data: @projected_amt
   },
   {
     name: "Stocks",
@@ -43,10 +43,5 @@
           }
         }
 %>
-
-
-<p><%= @user.dob.strftime('%d/%m/%y') %></p>
-<p><%= @user.monthly_income %></p>
-<p><%= @user.monthly_expenses %></p>
 
 <%= link_to "Back to Home", root_path, class: 'btn btn-primary' %>
