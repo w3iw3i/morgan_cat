@@ -1,6 +1,36 @@
 
-<%= column_chart [["2021", 2000], ["2022", 3000], ["2023", 5000], ["2025", 10000], ["2028", 15000], ["2030", 20000], ["2040", 40000], ["2050", 60000], ["2060", 100000], ["2070", 500000]],
-    title: 'Asset Projection',
+<% expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) %>
+
+  <%# data = [["2021", 2000], ["2022", 3000], ["2023", 5000], ["2025", 10000], ["2028", 15000], ["2030", 20000], ["2040", 40000], ["2050", 60000], ["2060", 100000], ["2070", 500000]] %> %>
+<%  data = [
+  {
+    name: "Cash",
+    data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+  },
+  {
+    name: "Stocks",
+    data: [["2010", 24], ["2020", 22], ["2030", 19]]
+  },
+  {
+    name: "Bonds",
+    data: [["2010", 20], ["2020", 23], ["2030", 29]]
+  }
+]
+%>
+
+<%=
+
+    # integrate expenses into projection
+    expenses.to_a.each do |expense|
+      data.first[:data].each do |cash|
+        if expense[:year_int].to_s == cash[0]
+          cash[1] -= expense[:inflated_amt]
+        end
+      end
+    end
+
+    column_chart data,
+    title: 'Asset Projection', stacked:true,
     library: {
       yAxis: {
            labels: {
@@ -12,7 +42,7 @@
             xDateFormat: '%B',
             valuePrefix: '$'
           }
-        } 
+        }
 %>
 
 
