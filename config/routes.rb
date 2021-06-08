@@ -7,9 +7,11 @@ Rails.application.routes.draw do
   post 'assets', to: 'assets#create'
   patch 'assets', to: 'assets#update'
 
-  devise_scope :user do
-    get 'sign_in', to: 'devise/sessions#new'
-  end
+  # devise_scope :user do
+  #   get 'sign_in', to: 'devise/sessions#new'
+
+
+  # end
 
   resources :users do
     resources :expenses, only: [:index, :create, :destroy]
