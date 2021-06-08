@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class ExpensesController < ApplicationController
   def index
     @expenses = Expense.all
