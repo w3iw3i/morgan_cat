@@ -1,5 +1,5 @@
 
-<%= column_chart [["2021", 2000], ["2022", 3000], ["2023", 5000], ["2025", 10000], ["2028", 15000], ["2030", 20000], ["2040", 40000], ["2050", 60000], ["2060", 100000], ["2070", 500000]],
+<%= column_chart @projected_amt,
     title: 'Asset Projection',
     library: {
       yAxis: {
@@ -14,10 +14,5 @@
           }
         } 
 %>
-
-
-<p><%= @user.dob.strftime('%d/%m/%y') %></p>
-<p><%= @user.monthly_income %></p>
-<p><%= @user.monthly_expenses %></p>
 
 <%= link_to "Back to Home", root_path, class: 'btn btn-primary' %>
