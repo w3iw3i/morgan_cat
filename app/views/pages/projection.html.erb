@@ -8,11 +8,23 @@
     },
     {
       name: "Stocks",
-      data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+      data: @stocks_projection
     },
     {
       name: "Bonds",
-      data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+      data: @bonds_projection
+    },
+    {
+      name: "CPF-Ordinary",
+      data: @cpfo_projection
+    },
+    {
+      name: "CPF-Special",
+      data: @cpfs_projection
+    },
+    {
+      name: "CPF-Medisave",
+      data: @cpfm_projection
     }
   ]
   %>
@@ -29,7 +41,7 @@
       end
 
       column_chart data,
-      title: 'Asset Projection', stacked:true,
+      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:-1000, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
             labels: {
@@ -44,8 +56,8 @@
           }
   %>
 <% else %>
-  <%= column_chart @projected_amt, 
-      title: 'Asset Projection', stacked:true,
+  <%= column_chart @projected_amt,
+      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:-1000, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
             labels: {

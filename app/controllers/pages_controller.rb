@@ -9,25 +9,41 @@ class PagesController < ApplicationController
 
   def projection
     projection_arrays
+    projection_constants
 
+    # Set up chart axes
     @user = User.new(user_params)
     @user.dob = year_to_dob
     @current_year = Date.current.year
     @current_age = @current_year - year_of_birth
     @monthly_savings = monthly_income - monthly_expenses
+    @year = @current_year
+    @period = @retirement_age - @current_age
+
+    # Account for asset_allocation
+    @stocks = Asset.where(user_id: current_user.id, asset_type: "stocks").first
+    @bonds = Asset.where(user_id: current_user.id, asset_type: "bonds").first
+    @cpfo = Asset.where(user_id: current_user.id, asset_type: "cpfo").first
+    @cpfs = Asset.where(user_id: current_user.id, asset_type: "cpfs").first
+    @cpfm = Asset.where(user_id: current_user.id, asset_type: "cpfm").first
+
+    # Find cash allocation
+    @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
+
+    # Create asset_projections
+    projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
+    projection_machine(@period, @year, (@stocks.growth_rate-@inflation), @value, @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
+    projection_machine(@period, @year, (@bonds.growth_rate-@inflation), @value, @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
+    projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), @value, @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
+    projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), @value, @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
+    projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), @value, @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
+  end
+
+  def projection_constants
     @rate = 1.5
     @retirement_age = 65
-    @period = 65 - @current_age
-
-    @year = @current_year
     @value = 0
     @inflation = 1.5
-    @period.times do
-      @year += 1
-      @interest = @rate - @inflation
-      @value = compound(@value, @rate, @monthly_savings).round
-      @projected_amt.append([@year.to_s, @value])
-    end
   end
 
   def projection_arrays
@@ -39,8 +55,17 @@ class PagesController < ApplicationController
     @cpfo_projection = []
     @cpfs_projection = []
     @cpfm_projection = []
+    @total_projection = []
   end
 
+  def projection_machine(period, year, inflation_adj_ror, value, monthly_contribution, asset_array)
+    period.times do
+      year += 1
+      value = compound(value, inflation_adj_ror, monthly_contribution).round
+      asset_array.append([year.to_s, value])
+      #total_projection[year] += value
+    end
+  end
 
   private
 
