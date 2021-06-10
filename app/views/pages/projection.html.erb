@@ -1,23 +1,64 @@
+<% if user_signed_in? %>
+  <% expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) %>
 
-<%= column_chart [["2021", 2000], ["2022", 3000], ["2023", 5000], ["2025", 10000], ["2028", 15000], ["2030", 20000], ["2040", 40000], ["2050", 60000], ["2060", 100000], ["2070", 500000]],
-    title: 'Asset Projection',
-    library: {
-      yAxis: {
-           labels: {
-               format: '${value}'
-           }
-       },
-          tooltip: {
-            pointFormat: 'Total Spent: <b>{point.y}</b>',
-            xDateFormat: '%B',
-            valuePrefix: '$'
+  <%  data = [
+    {
+      name: "Cash",
+      data: @projected_amt
+    },
+    {
+      name: "Stocks",
+      data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+    },
+    {
+      name: "Bonds",
+      data: [["2020", 20000], ["2021", 40000], ["2022", 60000], ["2023", 80000], ["2024", 100000], ["2025", 120000]]
+    }
+  ]
+  %>
+
+  <%=
+
+      # integrate expenses into projection
+      expenses.to_a.each do |expense|
+        data.first[:data].each do |cash|
+          if expense[:year_int].to_s == cash[0]
+            cash[1] -= expense[:inflated_amt]
+          end
+        end
+      end
+
+      column_chart data,
+      title: 'Asset Projection', stacked:true,
+      library: {
+        yAxis: {
+            labels: {
+                format: '${value}'
+            }
+        },
+            tooltip: {
+              pointFormat: 'Total Spent: <b>{point.y}</b>',
+              xDateFormat: '%B',
+              valuePrefix: '$'
+            }
           }
-        } 
-%>
-
-
-<p><%= @user.dob.strftime('%d/%m/%y') %></p>
-<p><%= @user.monthly_income %></p>
-<p><%= @user.monthly_expenses %></p>
+  %>
+<% else %>
+  <%= column_chart @projected_amt, 
+      title: 'Asset Projection', stacked:true,
+      library: {
+        yAxis: {
+            labels: {
+                format: '${value}'
+            }
+        },
+            tooltip: {
+              pointFormat: 'Total Spent: <b>{point.y}</b>',
+              xDateFormat: '%B',
+              valuePrefix: '$'
+            }
+          }
+  %>
+<% end %>
 
 <%= link_to "Back to Home", root_path, class: 'btn btn-primary' %>
