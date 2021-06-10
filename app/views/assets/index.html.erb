@@ -1,20 +1,46 @@
 <div class="container">
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <h1 id="asset-title">Assets</h1>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addassetmodal">
+      Add Assets
+    </button>
+  </div>
 
-<div class="d-flex justify-content-between align-items-center my-3">
-  <h1 id="asset-title">Assets</h1>
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addassetmodal">
-    Add Assets
-  </button>
-</div>
+  <% if @my_asset.empty? %>
+  <div class="text-center mt-5 pt-5">
+    <%= image_tag "empty.png", alt: "empty", width: "200px" %>
+  </div>
+  <% else %>
+  <!-- put a card design and iterate -->
+  <div class="asset-cards mt-5">
+    <% @my_asset.each do |asset| %>
+     <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= asset.asset_type %></h5>
+        <%= image_tag asset.asset_type + ".png", alt: "empty", width: "72px" %>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Amount</div>
+            <div><%= asset.amount %> SGD</div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Growth Rate</div>
+            <div><%= asset.growth_rate %> %</div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Asset Allocation</div>
+            <div><%= asset.asset_allocation %> %</div>
+          </li>
 
-<% if @my_asset.empty? %>
-<div class="text-center mt-5 pt-5">
-<%= image_tag "empty.png", alt: "empty", width: "200px" %>
+        </ul>
+        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <% end %>
 </div>
- <% else %>
- <!-- put a card design and iterate -->
-<% end %>
 
 <!-- Modal -->
 <div class="modal fade" id="addassetmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -27,16 +53,16 @@
         </button>
       </div>
       <div class="modal-body">
-  <div class="">
-  <%= simple_form_for(@asset, url: create_assets_path, html: {width: '100%', id: "asset-form"}) do |f| %>
-    <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Cash', 'Stock', 'Bond', 'CPF-O', 'CPF-S', 'CPF-M'] %>
-    <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
-    <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
-    <div class="mb-5">
-    <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
-    </div>
-  <% end %>
-  </div>
+        <div class="">
+          <%= simple_form_for(@asset, url: create_assets_path, html: {width: '100%', id: "asset-form"}) do |f| %>
+          <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Cash', 'Stock', 'Bond', 'CPF-O', 'CPF-S', 'CPF-M'] %>
+          <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          <div class="mb-5">
+            <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          </div>
+          <% end %>
+        </div>
 
       </div>
       <div class="modal-footer">
