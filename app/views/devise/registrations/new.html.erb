@@ -7,10 +7,21 @@
     <%= f.error_notification %>
 
     <div class="form-inputs">
-      <%= f.input :first_name, label: "First Name", placeholder: "John" %>
-      <%= f.input :last_name, label: "Last Name", placeholder: "Doe" %>
-      <%= f.input :dob, as: :date, html5: true, label: "Date of Birth" %>
-      <%= f.input :email, placeholder: "john.doe@gmail.com",
+      <%= f.input :first_name, 
+                  label: "First Name", 
+                  placeholder: "John",
+                  required: false %>
+      <%= f.input :last_name, 
+                  label: "Last Name", 
+                  placeholder: "Doe",
+                  required: false %>
+      <%= f.input :dob, 
+                  as: :date, 
+                  html5: true, 
+                  label: "Date of Birth",
+                  required: false %>
+      <%= f.input :email, 
+                  placeholder: "john.doe@gmail.com",
                   autofocus: true,
                   input_html: { autocomplete: "email" }%>
       <%= f.input :password,
