@@ -11,15 +11,27 @@
       <h3>Take the first step to build your <strong>FREE</strong> financial plan</h3>
     </div>
     <div class="flex-container">
-      <%= simple_form_for(@user, method: :post, url: projection_path) do |f| %>
+      <%= simple_form_for(@user, method: :post, url: projection_path, defaults: { required: false }) do |f| %>
+        <%= f.error_notification %>
         <div class="mt-3 form-inline div">
-          <%= f.input :dob, label: 'Birth Year: ', prompt: "Please select your birth year", collection: @start_year..@end_year %>
+          <%= f.input :dob, 
+                      label: 'Birth Year: ', 
+                      prompt: "Please select your birth year",
+                      error: 'This is a custom error message',
+                      collection: @start_year..@end_year 
+          %>
         </div>
         <div class="mt-3 form-inline div">
-          <%= f.input :monthly_income, label: 'Monthly Income: $', placeholder: "Please input your monthly income" %>
+          <%= f.input :monthly_income, 
+                      label: 'Monthly Income: $', 
+                      placeholder: "Please input your monthly income"
+          %>
         </div>
         <div class="mt-3 form-inline div">
-          <%= f.input :monthly_expenses, label: 'Monthly Expenses: $', placeholder: "Please input your monthly expenses" %>
+          <%= f.input :monthly_expenses, 
+                      label: 'Monthly Expenses: $', 
+                      placeholder: "Please input your monthly expenses"
+          %>
         </div>
         <div class="mt-5 landing-btn">
           <%= f.submit 'View Projection', class: 'btn btn-gradient' %>

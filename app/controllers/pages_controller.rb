@@ -20,23 +20,31 @@ class PagesController < ApplicationController
     @year = @current_year
     @period = @retirement_age - @current_age
 
-    # Account for asset_allocation
-    @stocks = Asset.where(user_id: current_user.id, asset_type: "stocks").first
-    @bonds = Asset.where(user_id: current_user.id, asset_type: "bonds").first
-    @cpfo = Asset.where(user_id: current_user.id, asset_type: "cpfo").first
-    @cpfs = Asset.where(user_id: current_user.id, asset_type: "cpfs").first
-    @cpfm = Asset.where(user_id: current_user.id, asset_type: "cpfm").first
+    # For user who have signed in
+    if user_signed_in?
+      # Account for asset_allocation
+      @stocks = Asset.where(user_id: current_user.id, asset_type: "stocks").first
+      @bonds = Asset.where(user_id: current_user.id, asset_type: "bonds").first
+      @cpfo = Asset.where(user_id: current_user.id, asset_type: "cpfo").first
+      @cpfs = Asset.where(user_id: current_user.id, asset_type: "cpfs").first
+      @cpfm = Asset.where(user_id: current_user.id, asset_type: "cpfm").first
 
-    # Find cash allocation
-    @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
+      # Find cash allocation
+      @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
 
-    # Create asset_projections
-    projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
-    projection_machine(@period, @year, (@stocks.growth_rate-@inflation), @value, @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
-    projection_machine(@period, @year, (@bonds.growth_rate-@inflation), @value, @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
-    projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), @value, @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
-    projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), @value, @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
-    projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), @value, @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
+      # Create asset_projections
+      projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
+      projection_machine(@period, @year, (@stocks.growth_rate-@inflation), @value, @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
+      projection_machine(@period, @year, (@bonds.growth_rate-@inflation), @value, @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
+      projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), @value, @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
+      projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), @value, @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
+      projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), @value, @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
+    else
+      # For new user / user who do not sign in
+      # Create cash_projections
+      @cash_allocation = 100
+      projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
+    end
   end
 
   def projection_constants
