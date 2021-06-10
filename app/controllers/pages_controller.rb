@@ -8,6 +8,8 @@ class PagesController < ApplicationController
   end
 
   def projection
+    projection_arrays
+
     @user = User.new(user_params)
     @user.dob = year_to_dob
     @current_year = Date.current.year
@@ -16,17 +18,29 @@ class PagesController < ApplicationController
     @rate = 1.5
     @retirement_age = 65
     @period = 65 - @current_age
-    @projected_amt = []
+
     @year = @current_year
     @value = 0
     @inflation = 1.5
-    @period.times do 
+    @period.times do
       @year += 1
       @interest = @rate - @inflation
       @value = compound(@value, @rate, @monthly_savings).round
       @projected_amt.append([@year.to_s, @value])
     end
   end
+
+  def projection_arrays
+    # cash projected amount
+    @projected_amt = []
+    # assets projected amount
+    @stocks_projection = []
+    @bonds_projection = []
+    @cpfo_projection = []
+    @cpfs_projection = []
+    @cpfm_projection = []
+  end
+
 
   private
 
@@ -53,5 +67,5 @@ class PagesController < ApplicationController
   def compound(present_value, rate, saving)
     future_value = (present_value + saving * 12) * (1 + (rate / 100))
   end
-  
+
 end
