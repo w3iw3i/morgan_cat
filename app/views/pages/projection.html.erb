@@ -1,7 +1,6 @@
 <% if user_signed_in? %>
-  <% expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) %>
-
-  <%  data = [
+  <%
+    data = [
     {
       name: "Cash",
       data: @projected_amt
@@ -30,18 +29,8 @@
   %>
 
   <%=
-
-      # integrate expenses into projection
-      expenses.to_a.each do |expense|
-        data.first[:data].each do |cash|
-          if expense[:year_int].to_s == cash[0]
-            cash[1] -= expense[:inflated_amt]
-          end
-        end
-      end
-
       column_chart data,
-      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:-1000, thousands: ",", loading: "Loading...",
+      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
             labels: {
@@ -57,7 +46,7 @@
   %>
 <% else %>
   <%= column_chart @projected_amt,
-      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:-1000, thousands: ",", loading: "Loading...",
+      title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
             labels: {
@@ -72,6 +61,51 @@
           }
   %>
 <% end %>
+
+<h2>Retirement Scenario Planning</h2>
+
+<table id="expense-table">
+  <col style="width:40%">
+	<col style="width:20%">
+	<col style="width:20%">
+  <col style="width:20%">
+  <tr>
+    <th>Scenario (Stocks / Bonds / Cash) </th>
+    <th>Average Outcome</th>
+    <th>90th Percentile</th>
+    <th>10th Percentile</th>
+  </tr>
+
+
+
+  <tr>
+    <td>Current Allocation: <%= @stocks.asset_allocation %> / <%= @bonds.asset_allocation %> / <%= @cash.asset_allocation %> </td>
+    <% i =0 %>
+    <% while i < 3 do %>
+      <td><%= number_to_currency(@baseline_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
+    <% i += 1 %>
+    <% end %>
+  </tr>
+
+  <tr>
+    <td>Moderate Risk Scenario: 80 / 10 / 10</td>
+    <% i =0 %>
+    <% while i < 3 do %>
+      <td><%= number_to_currency(@stock80_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
+    <% i += 1 %>
+    <% end %>
+  </tr>
+
+  <tr>
+    <td>Low Risk Scenario: 60 / 30 / 10</td>
+    <% i =0 %>
+    <% while i < 3 do %>
+      <td><%= number_to_currency(@stock60_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
+    <% i += 1 %>
+    <% end %>
+  </tr>
+</table>
+<br>
 
 <div class="container">
   <div class="row">
