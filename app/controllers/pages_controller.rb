@@ -50,7 +50,7 @@ class PagesController < ApplicationController
   end
 
   def projection_machine(period, year, inflation_adj_ror, value, monthly_contribution, asset_array, asset_type="Noncash")
-    expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt])
+    expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) if user_signed_in?
     period.times do
       year += 1
       value = compound(value, inflation_adj_ror, monthly_contribution).round
