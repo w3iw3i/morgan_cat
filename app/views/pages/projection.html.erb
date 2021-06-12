@@ -73,6 +73,33 @@
   %>
 <% end %>
 
+<div class="container">
+  <div class="row">
+    <div class="col-md">
+      <h4>Current Inputs</h4>
+      <table>
+        <tr>
+          <td>Year of Birth</td>
+          <td><%= @user.dob.year %></td>
+        </tr>
+        <tr>
+          <td>Monthly Income</td>
+          <td>$<%= @user.monthly_income %></td>
+        </tr>
+        <tr>
+          <td>Monthly Expenses</td>
+          <td>$<%= @user.monthly_expenses %></td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md">
+      <div class="landing-btn">
+        <%= link_to "Sign up to customise", new_user_registration_path, class: 'btn btn-gradient' %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="mt-5 landing-btn">
   <%= link_to "Back to Home", root_path, class: 'btn btn-gradient' %>
 </div>

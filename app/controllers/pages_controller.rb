@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :home, :projection ]
 
   def home
-    @user = User.new
+    @user = user_signed_in? ? current_user : User.new
     @end_year = Date.today.year
     @start_year = @end_year - 100
   end
@@ -12,11 +12,10 @@ class PagesController < ApplicationController
     projection_constants
 
     # Set up chart axes
-    @user = User.new(user_params)
-    @user.dob = year_to_dob
+    @user = get_user
     @current_year = Date.current.year
-    @current_age = @current_year - year_of_birth
-    @monthly_savings = monthly_income - monthly_expenses
+    @current_age = @current_year - @user.dob.year.to_i
+    @monthly_savings = @user.monthly_income - @user.monthly_expenses
     @year = @current_year
     @period = @retirement_age - @current_age
 
@@ -77,8 +76,15 @@ class PagesController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:dob, :monthly_income, :monthly_expenses)
+  def get_user
+    if params[:user]
+      user_params = params.require(:user).permit(:dob, :monthly_income, :monthly_expenses)
+      user = User.new(user_params)
+      user.dob = year_to_dob
+      user
+    else
+      current_user
+    end
   end
 
   def year_of_birth
