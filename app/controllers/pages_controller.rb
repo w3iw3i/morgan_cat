@@ -2,22 +2,22 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :home, :projection ]
 
   def home
-    @user = user_signed_in? ? current_user : User.new
+    @user = get_user_home
     @end_year = Date.today.year - 20
-    @start_year = 2021-45
+    @start_year = Date.today.year - 45
   end
 
   def projection
     projection_constants
     projection_arrays
-    @user = get_user
+    @user = get_user_projection
     @current_year = Date.current.year
     @current_age = @current_year - @user.dob.year.to_i
-    @monthly_savings = @user.monthly_income - @user.monthly_expenses
+    @monthly_savings = @user.monthly_income.to_i - @user.monthly_expenses.to_i
     @year = @current_year
     @period = @retirement_age - @current_age
 
-    if user_signed_in?
+    if user_signed_in? && Asset.exists?(user_id: @user.id)
       user_assets
 
       # Create asset_projections
@@ -118,14 +118,18 @@ class PagesController < ApplicationController
     @cpfm_projection = []
   end
 
-  def get_user
-    if params[:user]
+  def get_user_home
+    user_signed_in? ? current_user : User.new
+  end
+
+  def get_user_projection
+    if user_signed_in?
+      current_user
+    else
       user_params = params.require(:user).permit(:dob, :monthly_income, :monthly_expenses)
       user = User.new(user_params)
       user.dob = year_to_dob
       user
-    else
-      current_user
     end
   end
 
