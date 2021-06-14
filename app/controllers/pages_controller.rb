@@ -8,9 +8,9 @@ class PagesController < ApplicationController
   end
 
   def projection
+    @user = get_user_projection
     projection_constants
     projection_arrays
-    @user = get_user_projection
     @current_year = Date.current.year
     @current_age = @current_year - @user.dob.year.to_i
     @monthly_savings = @user.monthly_income.to_i - @user.monthly_expenses.to_i
@@ -90,7 +90,7 @@ class PagesController < ApplicationController
 
   def projection_constants
     @rate = 1.5
-    @retirement_age = 65
+    @retirement_age = user_signed_in? ? @user.target_retirement_age : 65
     @value = 0
     @inflation = 1.5
 

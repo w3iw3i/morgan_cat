@@ -108,28 +108,41 @@
   %>
 <% end %>
 
-<div class="container">
+<div class="container mt-5">
   <div class="row">
     <div class="col-md">
       <h4>Current Inputs</h4>
       <table>
         <tr>
-          <td>Year of Birth</td>
+          <td>Year of Birth : </td>
           <td><%= @user.dob.year %></td>
         </tr>
         <tr>
-          <td>Monthly Income</td>
+          <td>Income : </td>
           <td>$<%= @user.monthly_income %></td>
         </tr>
         <tr>
-          <td>Monthly Expenses</td>
+          <td>Expenses : </td>
           <td>$<%= @user.monthly_expenses %></td>
+        </tr>
+        <tr>
+          <td>Inflation : </td>
+          <td><%= @inflation %>%</td>
+        </tr>
+        <tr>
+          <td>Retirement Age : </td>
+          <td><%= @retirement_age %> years old</td>
         </tr>
       </table>
     </div>
     <div class="col-md">
       <div class="landing-btn">
-        <%= link_to "Sign up to customise", new_user_registration_path, class: 'btn btn-gradient' %>
+        <% if user_signed_in? %>
+          <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
+          <p><%= link_to "Add Expenses", user_expenses_path(@user.id), class: 'btn btn-gradient' %></p>
+        <% else %>
+          <%= link_to "Sign up to customise", new_user_registration_path, class: 'btn btn-gradient' %>
+        <% end %>
       </div>
     </div>
   </div>
