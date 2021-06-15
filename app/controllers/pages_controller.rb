@@ -184,12 +184,14 @@ class PagesController < ApplicationController
 
   def user_assets
     # Pull the relevant asset information for the user
-    @cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @stocks = Asset.where(user_id: current_user.id, asset_type: "Stock").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @bonds = Asset.where(user_id: current_user.id, asset_type: "Bond").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfo = Asset.where(user_id: current_user.id, asset_type: "CPF-O").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfs = Asset.where(user_id: current_user.id, asset_type: "CPF-S").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfm = Asset.where(user_id: current_user.id, asset_type: "CPF-M").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+
+    @cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first
+    @stocks = Asset.where(user_id: current_user.id, asset_type: "Stock").first
+    @bonds = Asset.where(user_id: current_user.id, asset_type: "Bond").first
+    @cpfo = Asset.where(user_id: current_user.id, asset_type: "CPF-O").first
+    @cpfs = Asset.where(user_id: current_user.id, asset_type: "CPF-S").first
+    @cpfm = Asset.where(user_id: current_user.id, asset_type: "CPF-M").first
+
     # Find cash allocation
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
