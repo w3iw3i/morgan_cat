@@ -14,14 +14,15 @@
 
 .landing-btn {
   text-align: center;
-  vertical-align: bottom;
+  display: flex;
+  justify-content: space-between
 }
 
 .landing-form {
-  align-self: center;  
+  align-self: center;
 }
 
-.form-inline div { 
+.form-inline div {
   display: inline-block;
 }
 
@@ -45,15 +46,42 @@
 }
 
 .btn-gradient {
-  color: white;
+  color: #955196;
   padding: 8px 24px;
-  border-radius: 4px;
-  background: linear-gradient(#167FFB, #0F60C4);
+  border-radius: 8px;
+  border-color: #955196;
   transition: background 0.3s ease;
-  border: 1px solid #0F60C4;
 }
 
 .btn-gradient:hover {
-  background: linear-gradient(#147EFF, #0F67DA);
+  background: #955196;
   color: white;
+}
+
+.btn {
+  width: 180px;
+  text-align: center;
+  height: 50px;
+  padding-top: 12px;
+}
+
+#chart-1 {
+  height: 450px !important;
+  padding-top: 10px !important;
+
+}
+
+#sub-header {
+  background-color: #955196;
+  color: white;
+  padding: 5px 15px;
+  margin-top: 10px;
+}
+
+.home-btn {
+  width: 600px !important;
+}
+
+body {
+ color: #955196 !important;
 }
