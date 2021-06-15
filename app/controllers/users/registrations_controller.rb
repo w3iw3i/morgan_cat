@@ -5,9 +5,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
+  def new
+    build_resource
+    resource.dob = params[:dob]
+    resource.monthly_income = params[:monthly_income]
+    resource.monthly_expenses = params[:monthly_expenses]
+    yield resource if block_given?
+    respond_with resource
+  end
 
   # POST /resource
   # def create
@@ -60,7 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     projection_path(resource)
   end
 
-  # Called before resource.save
+  # Called before resource.save in create action
   def build_resource(hash = {})
     super(hash)
     resource.monthly_savings = resource.monthly_income.to_i - resource.monthly_expenses.to_i
