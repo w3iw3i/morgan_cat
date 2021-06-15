@@ -13,11 +13,12 @@ class PagesController < ApplicationController
     projection_arrays
     projection_calcs
 
+
     if user_signed_in? && Asset.exists?(user_id: @user.id)
       user_assets
 
       # Create asset_projections
-      projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "cash")
+      projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
       projection_machine(@period, @year, (@stocks.growth_rate-@inflation), (@stocks.amount + @value), @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
       projection_machine(@period, @year, (@bonds.growth_rate-@inflation), (@bonds.amount + @value), @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
       projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), (@cpfo.amount + @value), @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
@@ -46,7 +47,7 @@ class PagesController < ApplicationController
 
   def scenario_engine(scenario_array, cash_allocation, stocks_allocation, bonds_allocation)
     @scenario_hash.each do |key, value|
-      @cash_scenario_proj = projection_machine(@period, @year, value[0], (@cash.amount + @value), cash_allocation * 0.01 * @monthly_savings, @projected_amt, "cash")
+      @cash_scenario_proj = projection_machine(@period, @year, value[0], (@cash.amount + @value), cash_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
       @stocks_scenario_proj = projection_machine(@period, @year, (value[1]-@inflation), (@stocks.amount + @value), stocks_allocation * 0.01 * @monthly_savings, @stocks_projection)
       @bonds_scenario_proj = projection_machine(@period, @year, (value[2]-@inflation), (@bonds.amount + @value), bonds_allocation * 0.01 * @monthly_savings, @bonds_projection)
       @total_scenario_proj = @cash_scenario_proj+@stocks_scenario_proj+@bonds_scenario_proj
@@ -59,7 +60,7 @@ class PagesController < ApplicationController
     period.times do
       year += 1
       value = compound(value, inflation_adj_ror, monthly_contribution).round
-      if asset_type == "cash"
+      if asset_type == "Cash"
         expenses.to_a.each do |expense|
           if expense[:year_int] == year
             value -= expense[:inflated_amt]
@@ -168,12 +169,12 @@ class PagesController < ApplicationController
 
   def user_assets
     # Pull the relevant asset information for the user
-    @cash = Asset.where(user_id: current_user.id, asset_type: "cash").first
-    @stocks = Asset.where(user_id: current_user.id, asset_type: "stocks").first
-    @bonds = Asset.where(user_id: current_user.id, asset_type: "bonds").first
-    @cpfo = Asset.where(user_id: current_user.id, asset_type: "cpfo").first
-    @cpfs = Asset.where(user_id: current_user.id, asset_type: "cpfs").first
-    @cpfm = Asset.where(user_id: current_user.id, asset_type: "cpfm").first
+    @cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    @stocks = Asset.where(user_id: current_user.id, asset_type: "Stock").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    @bonds = Asset.where(user_id: current_user.id, asset_type: "Bond").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    @cpfo = Asset.where(user_id: current_user.id, asset_type: "CPF-O").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    @cpfs = Asset.where(user_id: current_user.id, asset_type: "CPF-S").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    @cpfm = Asset.where(user_id: current_user.id, asset_type: "CPF-M").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
     # Find cash allocation
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
