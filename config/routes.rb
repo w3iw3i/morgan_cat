@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root to: 'pages#home'
 
   get 'projection', to: 'pages#projection'
-  get 'scenarios', to: 'pages#scenarios'
+  get 'scenario_planning', to: 'pages#scenario_planning'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :assets, only: [:index]

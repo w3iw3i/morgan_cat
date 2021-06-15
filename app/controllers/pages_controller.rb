@@ -11,11 +11,7 @@ class PagesController < ApplicationController
     @user = get_user_projection
     projection_constants
     projection_arrays
-    @current_year = Date.current.year
-    @current_age = @current_year - @user.dob.year.to_i
-    @monthly_savings = @user.monthly_income.to_i - @user.monthly_expenses.to_i
-    @year = @current_year
-    @period = @retirement_age - @current_age
+    projection_calcs
 
     if user_signed_in? && Asset.exists?(user_id: @user.id)
       user_assets
@@ -28,12 +24,21 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), (@cpfs.amount + @value), @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
       projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), (@cpfm.amount + @value), @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
 
-      scenarios
     else
       # For new user / user who do not sign in
       # Create cash_projections
       @cash_allocation = 100
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
+    end
+  end
+
+  def scenario_planning
+    if user_signed_in?
+      @user = get_user_projection
+      projection_constants
+      projection_arrays
+      projection_calcs
+      scenarios
     end
   end
 
@@ -116,6 +121,14 @@ class PagesController < ApplicationController
     @cpfo_projection = []
     @cpfs_projection = []
     @cpfm_projection = []
+  end
+
+  def projection_calcs
+    @current_year = Date.current.year
+    @current_age = @current_year - @user.dob.year.to_i
+    @monthly_savings = @user.monthly_income.to_i - @user.monthly_expenses.to_i
+    @year = @current_year
+    @period = @retirement_age - @current_age
   end
 
   def get_user_home
