@@ -51,6 +51,19 @@ class PagesController < ApplicationController
       @bonds_scenario_proj = projection_machine(@period, @year, (value[2]-@inflation), (@bonds.amount + @value), bonds_allocation * 0.01 * @monthly_savings, @bonds_projection)
       @total_scenario_proj = @cash_scenario_proj+@stocks_scenario_proj+@bonds_scenario_proj
       scenario_array << @total_scenario_proj
+
+      if key == :average
+        @combined = @projected_amt + @stocks_projection + @bonds_projection
+        @scenario_chartline << @combined.group_by { |row| row[0] }.map do |_, collection|
+          collection.reduce do |result, row|
+            result[1] += row[1]
+            result
+          end
+        end
+      end
+    @projected_amt = []
+    @stocks_projection = []
+    @bonds_projection = []
     end
   end
 
@@ -87,6 +100,7 @@ class PagesController < ApplicationController
     scenario_engine(@baseline_scenario, @cash.asset_allocation, @stocks.asset_allocation, @bonds.asset_allocation)
     scenario_engine(@stock80_scenario, 10, 80, 10)
     scenario_engine(@stock60_scenario, 10, 60, 30)
+
   end
 
   def user_params
@@ -121,6 +135,7 @@ class PagesController < ApplicationController
     @cpfo_projection = []
     @cpfs_projection = []
     @cpfm_projection = []
+    @scenario_chartline = []
   end
 
   def projection_calcs
@@ -179,3 +194,5 @@ class PagesController < ApplicationController
   end
 
 end
+
+
