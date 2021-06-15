@@ -17,7 +17,7 @@ class PagesController < ApplicationController
       user_assets
 
       # Create asset_projections
-      projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "cash")
+      projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
       projection_machine(@period, @year, (@stocks.growth_rate-@inflation), (@stocks.amount + @value), @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
       projection_machine(@period, @year, (@bonds.growth_rate-@inflation), (@bonds.amount + @value), @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
       projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), (@cpfo.amount + @value), @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
@@ -168,12 +168,12 @@ class PagesController < ApplicationController
 
   def user_assets
     # Pull the relevant asset information for the user
-    @cash = Asset.where(user_id: current_user.id, asset_type: "cash").first
-    @stocks = Asset.where(user_id: current_user.id, asset_type: "stocks").first
-    @bonds = Asset.where(user_id: current_user.id, asset_type: "bonds").first
-    @cpfo = Asset.where(user_id: current_user.id, asset_type: "cpfo").first
-    @cpfs = Asset.where(user_id: current_user.id, asset_type: "cpfs").first
-    @cpfm = Asset.where(user_id: current_user.id, asset_type: "cpfm").first
+    @cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first
+    @stocks = Asset.where(user_id: current_user.id, asset_type: "Stock").first
+    @bonds = Asset.where(user_id: current_user.id, asset_type: "Bond").first
+    @cpfo = Asset.where(user_id: current_user.id, asset_type: "CPF-O").first
+    @cpfs = Asset.where(user_id: current_user.id, asset_type: "CPF-S").first
+    @cpfm = Asset.where(user_id: current_user.id, asset_type: "CPF-M").first
     # Find cash allocation
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
