@@ -45,51 +45,6 @@
           }
   %>
 
-  <h2>Retirement Scenario Planning</h2>
-
-  <table id="expense-table">
-    <col style="width:40%">
-    <col style="width:20%">
-    <col style="width:20%">
-    <col style="width:20%">
-    <tr>
-      <th>Scenario (Stocks / Bonds / Cash) </th>
-      <th>Average Outcome</th>
-      <th>90th Percentile</th>
-      <th>10th Percentile</th>
-    </tr>
-
-
-
-    <tr>
-      <td>Current Allocation: <%= @stocks.asset_allocation %> / <%= @bonds.asset_allocation %> / <%= @cash.asset_allocation %> </td>
-      <% i =0 %>
-      <% while i < 3 do %>
-        <td><%= number_to_currency(@baseline_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
-      <% i += 1 %>
-      <% end %>
-    </tr>
-
-    <tr>
-      <td>Moderate Risk Scenario: 80 / 10 / 10</td>
-      <% i =0 %>
-      <% while i < 3 do %>
-        <td><%= number_to_currency(@stock80_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
-      <% i += 1 %>
-      <% end %>
-    </tr>
-
-    <tr>
-      <td>Low Risk Scenario: 60 / 30 / 10</td>
-      <% i =0 %>
-      <% while i < 3 do %>
-        <td><%= number_to_currency(@stock60_scenario[i], unit: '$', separator: ",", precision: 0)%></td>
-      <% i += 1 %>
-      <% end %>
-    </tr>
-  </table>
-  <br>
-
 <% else %>
   <%= column_chart @projected_amt,
       title: 'Asset Projection', stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
@@ -140,6 +95,7 @@
         <% if user_signed_in? %>
           <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
           <p><%= link_to "Add Expenses", user_expenses_path(@user.id), class: 'btn btn-gradient' %></p>
+          <p><%= link_to "Scenario Planning", scenario_planning_path, class: 'btn btn-gradient' %></p>
         <% else %>
           <%= link_to "Sign up to customise", new_user_registration_path, class: 'btn btn-gradient' %>
         <% end %>
