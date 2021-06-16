@@ -14,12 +14,14 @@
 
 .landing-btn {
   text-align: center;
-  // display: flex;
-  justify-content: space-between
+  display: flex;
+  justify-content: space-between;
 }
 
 .landing-form {
-  align-self: center;
+  width: 60%;
+  align-items: right;
+  margin: auto;
 }
 
 .form-inline div {
@@ -62,7 +64,8 @@
   width: 180px;
   text-align: center;
   height: 50px;
-  padding-top: 12px;
+  margin: auto;
+  // padding-top: 12px;
 }
 
 #chart-1 {
@@ -76,6 +79,7 @@
   color: white;
   padding: 5px 15px;
   margin-top: 10px;
+  text-align: center;
 }
 
 .home-btn {
