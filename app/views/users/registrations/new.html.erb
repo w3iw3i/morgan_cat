@@ -10,25 +10,20 @@
       <%= f.input :first_name, 
                   label: "First Name", 
                   placeholder: "John",
-                  autofocus: true,
-                  required: false %>
+                  autofocus: true %>
       <%= f.input :last_name, 
                   label: "Last Name", 
-                  placeholder: "Doe",
-                  required: false %>
+                  placeholder: "Doe" %>
       <%= f.input :dob, 
                   as: :date, 
                   html5: true,
-                  label: "Date of Birth",
-                  required: false %>
+                  label: "Date of Birth" %>
       <%= f.input :monthly_income,
                   label: "Monthly Income",
-                  placeholder: "Please input your monthly income",
-                  required: false %>
+                  placeholder: "Please input your monthly income" %>
       <%= f.input :monthly_expenses,
                   label: "Monthly Expenses",
-                  placeholder: "Please input your monthly expenses",
-                  required: false %>
+                  placeholder: "Please input your monthly expenses" %>
       <%= f.input :email, 
                   placeholder: "john.doe@gmail.com",
                   input_html: { autocomplete: "email" }%>
