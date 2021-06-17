@@ -1,0 +1,88 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <h1 id="property-title">Properties</h1>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpropertymodal">
+      Add Properties
+    </button>
+  </div>
+
+  <% if @my_property.empty? %>
+  <div class="text-center mt-5 pt-5">
+    <%= image_tag "empty.png", alt: "empty", width: "200px" %>
+  </div>
+  <% else %>
+  <!-- put a card design and iterate -->
+  <div class="property-cards mt-5">
+    <% @my_property.each do |property| %>
+     <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= property.flat_type %></h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Address</div>
+            <div><%= property.address %> SGD</div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Flat Type</div>
+            <div><%= property.flat_type %></div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Floor & Unit</div>
+            <div><%= property.floor %> - <%= property.unit %></div>
+          </li>
+
+        </ul>
+        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <% end %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addpropertymodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Properties</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <%= simple_form_for(@property, url: create_properties_path, html: {width: '100%', id: "property-form"}) do |f| %>
+          <%= f.input :address, label: 'Address', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :floor, label: 'Floor', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :unit, label: 'Unit', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', 'Executive'] %>
+          <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :property_growth_rate, label: 'Property Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          <div class="mb-5">
+            <%= f.input :property_value, label: 'Property Value (SGD): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          </div>
+          <% end %>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="property-form">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
