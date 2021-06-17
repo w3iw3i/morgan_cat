@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_10_114646) do
+ActiveRecord::Schema.define(version: 2021_06_17_125837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,21 @@ ActiveRecord::Schema.define(version: 2021_06_10_114646) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
+  create_table "properties", force: :cascade do |t|
+    t.string "address"
+    t.string "floor"
+    t.string "unit"
+    t.string "flat_type"
+    t.integer "area"
+    t.integer "lease_remaining"
+    t.bigint "user_id", null: false
+    t.float "property_growth_rate"
+    t.integer "property_value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_properties_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -60,4 +75,5 @@ ActiveRecord::Schema.define(version: 2021_06_10_114646) do
 
   add_foreign_key "assets", "users"
   add_foreign_key "expenses", "users"
+  add_foreign_key "properties", "users"
 end
