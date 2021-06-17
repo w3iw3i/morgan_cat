@@ -25,13 +25,17 @@
     {
       name: "CPF-Medisave",
       data: @cpfm_projection
+    },
+    {
+      name: "Property",
+      data: @property_projection
     }
   ]
   %>
 
   <%=
       column_chart data,
-      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600"],
+      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600", "#778899"],
       stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
