@@ -92,3 +92,26 @@
 body {
  color: #955196 !important;
 }
+
+.add-buttons {
+  display: grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-gap: 16px;
+}
+
+.btn-primary {
+  background-color:#955196;
+  border-radius: 8px;
+  border-color: #955196;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #f2f2f2;
+  color: #955196;
+  // padding: 8px 24px;
+  border-radius: 8px;
+  border-color: #955196;
+  transition: background 0.3s ease;
+}
+

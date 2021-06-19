@@ -99,16 +99,17 @@
     </div>
     <div class="col-md">
       <h4 id="sub-header">Refine Projection</h4>
+
+      <div class="">
+
         <% if user_signed_in? %>
-          <div class="landing-btn">
+          <div class="add-buttons">
             <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
             <p><%= link_to "Add Expenses", user_expenses_path(@user.id), class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Scenario Planning", scenario_planning_path, class: 'btn btn-gradient' %></p>
+            <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
           </div>
-          <div class="landing-btn">
-            <p><%= link_to "Add Property", property_path, class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Property Details", property_path, class: 'btn btn-gradient' %></p>
-           </div>
+            <p><%= link_to "Home Equity Computation", property_path, class: 'btn btn-gradient' %></p>
+            <p><%= link_to "Scenario Planning", scenario_planning_path, class: 'btn btn-gradient btn-block' %></p>
         <% else %>
           <div class="landing-btn">
             <%= link_to "Sign up to customise", new_user_registration_path(dob: @user.dob, monthly_income: @user.monthly_income, monthly_expenses: @user.monthly_expenses), class: 'btn btn-gradient' %>
@@ -118,7 +119,8 @@
   </div>
 </div>
 
-<div class="landing-btn home">
+
+<div class="landing-btn mt-5">
   <%= link_to "Back to Home", root_path, class: 'btn btn-gradient home-btn' %>
 </div>
 
