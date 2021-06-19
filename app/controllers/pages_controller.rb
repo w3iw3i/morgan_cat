@@ -26,7 +26,17 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_projection)
 
       # Account for Property Lease Decay
-      @property_projection = lease_decay(@property_projection, 40, @period)
+      @property_projection = lease_decay(@property_projection, 80, @period)
+
+      # temp values
+      @loan_amount = 315000
+      @loan_interest_annual = 0.050
+      @loan_tenure_years = 20
+      @start_ownership_year = 2020
+
+      # Account for home loan / home equity
+      loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
+      @property_projection = home_equity(@property_projection, @loan_outstanding_cumulative)
 
     else
       # For new user / user who do not sign in
@@ -44,6 +54,26 @@ class PagesController < ApplicationController
       projection_calcs
       scenarios
     end
+  end
+
+  def property
+    @user = get_user_projection
+    projection_constants
+    projection_arrays
+    projection_calcs
+
+    projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_projection)
+    @property_growth = @property_projection.deep_dup
+    @property_growth_decay = lease_decay(@property_projection, 80, @period).deep_dup
+
+    # temp values
+    @loan_amount = 315000
+    @loan_interest_annual = 0.050
+    @loan_tenure_years = 20
+    @start_ownership_year = 2020
+
+    @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
+    @home_equity =  home_equity(@property_projection, @loan_outstanding_cumulative)
   end
 
   private
@@ -116,7 +146,7 @@ class PagesController < ApplicationController
     @retirement_age = user_signed_in? ? @user.target_retirement_age : 65
     @value = 0
     @inflation = 1.5
-    @prop_current_value = 100000
+    @prop_current_value = 350000
 
     # stocks
     @stocks_average = 5 + @inflation
@@ -142,6 +172,8 @@ class PagesController < ApplicationController
     @cpfm_projection = []
     @scenario_chartline = []
     @property_projection = []
+    @principal_paid_annual = []
+    @loan_outstanding_cumulative = []
   end
 
   def projection_calcs
@@ -209,7 +241,37 @@ class PagesController < ApplicationController
       element[1] = element[1] * (Leasehold_table[@counter-1][1] / @base_percentile)
       @counter -= 1
     end
+    property_projection
+  end
 
+  def loan_outstanding_by_year(loan_amount, interest_rate, loan_tenure, start_year)
+    @pmt = Exonio.pmt(interest_rate / 12, 12 * loan_tenure, loan_amount)
+    @payment_month = 1
+    @year = start_year
+    @principal_paid_cumulative = 0
+
+    loan_tenure.times do
+      @principal_paid_annual << [@year, 0]
+      12.times do
+        @principal = @pmt - Exonio.ipmt(interest_rate / 12, @payment_month, 12 * loan_tenure, loan_amount)
+        @principal_paid_annual.last[1] += @principal
+        @payment_month += 1
+      end
+    @principal_paid_cumulative += @principal_paid_annual.last[1]
+    @loan_outstanding_cumulative << [@year, loan_amount + @principal_paid_cumulative]
+    @year += 1
+  end
+    @loan_outstanding_cumulative
+  end
+
+  def home_equity(property_projection, loan_outstanding_cumulative)
+    property_projection.each do |property_value|
+      loan_outstanding_cumulative.each do |loan_outstanding|
+        if property_value[0].to_i == loan_outstanding[0]
+          property_value[1] -= [loan_outstanding[1],0].max
+        end
+      end
+    end
     property_projection
   end
 
