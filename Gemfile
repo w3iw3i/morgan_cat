@@ -37,7 +37,9 @@ gem 'simple_form'
 gem 'chartkick'
 gem 'highcharts-rails'
 gem 'groupdate'
-group :development, :test do
+gem "watir-rails", "~> 2.2"
+gem 'webdrivers'
+group :development, :test do  
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'dotenv-rails'
@@ -62,7 +64,6 @@ group :test do
   gem 'capybara', '>= 3.26'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
