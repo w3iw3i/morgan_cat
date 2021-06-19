@@ -21,7 +21,7 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <div>Address</div>
-            <div><%= property.address %> SGD</div>
+            <div><%= property.address %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Flat Type</div>
@@ -73,7 +73,7 @@
           <%= f.input :address, label: 'Address', :input_html => {:style=> 'width: 100%'}, :required => false%>
           <%= f.input :floor, label: 'Floor', :input_html => {:style=> 'width: 100%'}, :required => false%>
           <%= f.input :unit, label: 'Unit', :input_html => {:style=> 'width: 100%'}, :required => false%>
-          <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', 'Executive'] %>
+          <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', '5 Room', 'Executive'] %>
           <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false%>
           <%= f.input :property_growth_rate, label: 'Property Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
           <div class="mb-5">
