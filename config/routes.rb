@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   get 'projection', to: 'pages#projection'
   get 'scenario_planning', to: 'pages#scenario_planning'
+  get 'property', to: 'pages#property'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :assets, only: [:index]

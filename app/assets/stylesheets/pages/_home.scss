@@ -15,7 +15,7 @@
 .landing-btn {
   text-align: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .landing-form {
@@ -63,7 +63,7 @@
 .btn {
   width: 180px;
   text-align: center;
-  height: 50px;
+  height: 40px;
   margin: auto;
   // padding-top: 12px;
 }
@@ -80,12 +80,38 @@
   padding: 5px 15px;
   margin-top: 10px;
   text-align: center;
+  margin-bottom: 15px;
 }
 
 .home-btn {
   width: 600px !important;
+  background-color: #955196;
+  color: white;
 }
 
 body {
  color: #955196 !important;
 }
+
+.add-buttons {
+  display: grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-gap: 16px;
+}
+
+.btn-primary {
+  background-color:#955196;
+  border-radius: 8px;
+  border-color: #955196;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #f2f2f2;
+  color: #955196;
+  // padding: 8px 24px;
+  border-radius: 8px;
+  border-color: #955196;
+  transition: background 0.3s ease;
+}
+
