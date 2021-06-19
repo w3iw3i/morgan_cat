@@ -28,8 +28,24 @@
             <div><%= property.flat_type %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
+            <div>Area</div>
+            <div><%= property.area %></div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
             <div>Floor & Unit</div>
             <div><%= property.floor %> - <%= property.unit %></div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Property Growth Rate</div>
+            <div><%= property.property_growth_rate %></div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Property Value</div>
+            <div><%= property.property_value %></div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <div>Lease Remaining</div>
+            <div><%= property.lease_remaining %></div>
           </li>
 
         </ul>
@@ -61,7 +77,6 @@
           <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false%>
           <%= f.input :property_growth_rate, label: 'Property Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
           <div class="mb-5">
-            <%= f.input :property_value, label: 'Property Value (SGD): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
           </div>
           <% end %>
         </div>
