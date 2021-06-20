@@ -81,11 +81,11 @@
         </tr>
         <tr>
           <td><strong>Income :</strong> </td>
-          <td>$<%= @user.monthly_income %></td>
+          <td>$<%= number_with_delimiter(@user.monthly_income, :delimiter => ',') %></td>
         </tr>
         <tr>
           <td><strong>Expenses :</strong> </td>
-          <td>$<%= @user.monthly_expenses %></td>
+          <td>$<%= number_with_delimiter(@user.monthly_expenses, :delimiter => ',') %></td>
         </tr>
         <tr>
           <td><strong>Inflation :</strong> </td>
