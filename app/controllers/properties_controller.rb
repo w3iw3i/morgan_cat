@@ -40,7 +40,6 @@ class PropertiesController < ApplicationController
     # js_doc = browser.element(css: ".zoom-value-prediction").wait_until(&:present?)
     # value = js_doc.inner_html
     # browser.close
-
     if @property.save
       redirect_to properties_path
     end
