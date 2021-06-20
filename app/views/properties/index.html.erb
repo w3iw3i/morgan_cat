@@ -41,7 +41,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Property Value</div>
-            <div><%= property.property_value %> SGD</div>
+            <div><%= number_with_delimiter(property.property_value, :delimiter => ',') %> SGD</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Lease Remaining</div>
@@ -53,7 +53,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Original Loan Amount</div>
-            <div><%= property.original_loan_amount %> SGD</div>
+            <div><%= number_with_delimiter(property.original_loan_amount, :delimiter => ',') %> SGD</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Annual Loan Interest</div>
@@ -90,7 +90,7 @@
               <%= f.input :address, label: 'Address', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type postal code or address"%>
               <%= f.input :floor, label: 'Floor', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type floor"%>
               <%= f.input :unit, label: 'Unit', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Unit"%>
-              <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', 'Executive'], prompt: "Select Flat Type" %>
+              <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', '5 Room', 'Executive'], prompt: "Select Flat Type" %>
               <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Area"%>
             </div>
             <div class="col">
