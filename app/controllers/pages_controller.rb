@@ -42,7 +42,7 @@ class PagesController < ApplicationController
         @property_data[index] = lease_decay(@property_data[index], 80, @period)
 
         # Account for home loan / home equity
-        loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
+        @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
         @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
 
       end
@@ -269,10 +269,10 @@ class PagesController < ApplicationController
         @principal_paid_annual.last[1] += @principal
         @payment_month += 1
       end
-    @principal_paid_cumulative += @principal_paid_annual.last[1]
-    @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
-    @start_year += 1
-  end
+      @principal_paid_cumulative += @principal_paid_annual.last[1]
+      @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
+      @start_year += 1
+    end
     @loan_outstanding_cumulative
   end
 
