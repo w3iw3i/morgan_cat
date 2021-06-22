@@ -1,0 +1,13 @@
+current directory: /Users/shawn/code/chshawn/morgan_cat/vendor/bundle/ruby/2.6.0/gems/json-1.8.6/ext/json
+/Users/shawn/.rbenv/versions/2.6.6/bin/ruby -I /Users/shawn/.rbenv/versions/2.6.6/lib/ruby/2.6.0 -r ./siteconf20210622-23792-1cy8oy0.rb extconf.rb
+creating Makefile
+
+current directory: /Users/shawn/code/chshawn/morgan_cat/vendor/bundle/ruby/2.6.0/gems/json-1.8.6/ext/json
+make "DESTDIR=" clean
+
+current directory: /Users/shawn/code/chshawn/morgan_cat/vendor/bundle/ruby/2.6.0/gems/json-1.8.6/ext/json
+make "DESTDIR="
+make: Nothing to be done for `all'.
+
+current directory: /Users/shawn/code/chshawn/morgan_cat/vendor/bundle/ruby/2.6.0/gems/json-1.8.6/ext/json
+make "DESTDIR=" install

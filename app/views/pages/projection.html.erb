@@ -25,17 +25,21 @@
     {
       name: "CPF-Medisave",
       data: @cpfm_projection
-    },
-    {
-      name: "Property",
-      data: @property_projection
     }
-  ]
+    ]
+
+    @property_data.each_with_index do |property,index|
+      new_property = {
+                      name: "Property #{index + 1}",
+                      data: property
+                      }
+      data << new_property
+    end
   %>
 
   <%=
       column_chart data,
-      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600", "#778899"],
+      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600", "#778899", "#003f5c"],
       stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {

@@ -23,20 +23,29 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), (@cpfo.amount + @value), @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
       projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), (@cpfs.amount + @value), @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
       projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), (@cpfm.amount + @value), @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
-      projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_projection)
+
+      # Find the list of properties belonging to the user
+      prop_list = Property.where(user_id: current_user.id)
+      prop_list.each_with_index do |property, index|
+
+      @property_data[index] = []
+
+      # Factor in values for each property
+      @loan_amount = property.original_loan_amount
+      @loan_interest_annual = property.loan_interest_annual
+      @loan_tenure_years = property.loan_tenure_years
+      @start_ownership_year = property.start_ownership_year
+
+      projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
 
       # Account for Property Lease Decay
-      @property_projection = lease_decay(@property_projection, 80, @period)
-
-      # temp values
-      @loan_amount = 315000
-      @loan_interest_annual = 0.050
-      @loan_tenure_years = 20
-      @start_ownership_year = 2020
+      @property_data[index] = lease_decay(@property_data[index], 80, @period)
 
       # Account for home loan / home equity
       loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
-      @property_projection = home_equity(@property_projection, @loan_outstanding_cumulative)
+      @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
+
+      end
 
     else
       # For new user / user who do not sign in
@@ -44,6 +53,7 @@ class PagesController < ApplicationController
       @cash_allocation = 100
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
+
   end
 
   def scenario_planning
@@ -104,7 +114,6 @@ class PagesController < ApplicationController
   def projection_machine(period, year, inflation_adj_ror, value, monthly_contribution, asset_array, asset_type="Noncash")
     expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) if user_signed_in?
     period.times do
-      year += 1
       value = compound(value, inflation_adj_ror, monthly_contribution).round
       if asset_type == "Cash"
         expenses.to_a.each do |expense|
@@ -113,7 +122,8 @@ class PagesController < ApplicationController
           end
         end
       end
-        asset_array.append([year.to_s, value])
+      asset_array.append([year.to_s, value])
+      year += 1
     end
     value
   end
@@ -170,6 +180,7 @@ class PagesController < ApplicationController
     @cpfo_projection = []
     @cpfs_projection = []
     @cpfm_projection = []
+    @property_data = []
     @scenario_chartline = []
     @property_projection = []
     @principal_paid_annual = []
@@ -247,7 +258,7 @@ class PagesController < ApplicationController
   def loan_outstanding_by_year(loan_amount, interest_rate, loan_tenure, start_year)
     @pmt = Exonio.pmt(interest_rate / 12, 12 * loan_tenure, loan_amount)
     @payment_month = 1
-    @year = start_year
+    @start_year = start_year
     @principal_paid_cumulative = 0
 
     loan_tenure.times do
@@ -258,8 +269,8 @@ class PagesController < ApplicationController
         @payment_month += 1
       end
     @principal_paid_cumulative += @principal_paid_annual.last[1]
-    @loan_outstanding_cumulative << [@year, loan_amount + @principal_paid_cumulative]
-    @year += 1
+    @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
+    @start_year += 1
   end
     @loan_outstanding_cumulative
   end
