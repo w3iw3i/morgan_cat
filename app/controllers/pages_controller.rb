@@ -12,9 +12,9 @@ class PagesController < ApplicationController
     projection_constants
     projection_arrays
     projection_calcs
+    user_assets
 
     if user_signed_in? && Asset.exists?(user_id: @user.id)
-      user_assets
 
       # Create asset_projections
       projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
@@ -28,22 +28,22 @@ class PagesController < ApplicationController
       prop_list = Property.where(user_id: current_user.id)
       prop_list.each_with_index do |property, index|
 
-      @property_data[index] = []
+        @property_data[index] = []
 
-      # Factor in values for each property
-      @loan_amount = property.original_loan_amount
-      @loan_interest_annual = property.loan_interest_annual
-      @loan_tenure_years = property.loan_tenure_years
-      @start_ownership_year = property.start_ownership_year
+        # Factor in values for each property
+        @loan_amount = property.original_loan_amount
+        @loan_interest_annual = property.loan_interest_annual
+        @loan_tenure_years = property.loan_tenure_years
+        @start_ownership_year = property.start_ownership_year
 
-      projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
+        projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
 
-      # Account for Property Lease Decay
-      @property_data[index] = lease_decay(@property_data[index], 80, @period)
+        # Account for Property Lease Decay
+        @property_data[index] = lease_decay(@property_data[index], 80, @period)
 
-      # Account for home loan / home equity
-      loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
-      @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
+        # Account for home loan / home equity
+        loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
+        @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
 
       end
 
@@ -54,7 +54,7 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
 
-    @user_cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first.amount
+    # @user_cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first.amount
   end
 
   def scenario_planning

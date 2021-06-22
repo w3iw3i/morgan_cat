@@ -14,15 +14,6 @@ Rails.application.routes.draw do
   resources :properties, only: [:index]
   post '/create-properties', to: 'properties#create'
 
-
-
-  # devise_scope :user do
-  #   get 'sign_in', to: 'devise/sessions#new'
-
-
-  # end
-
-
   resources :users do
     resources :expenses, only: [:index, :create, :destroy]
   end
