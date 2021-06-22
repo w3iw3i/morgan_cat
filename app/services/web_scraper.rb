@@ -1,6 +1,6 @@
 require "open-uri"
 require "nokogiri"
-require_relative "../controllers/properties_controller.rb"
+# require_relative "../controllers/properties_controller.rb"
 
 class WebScraper
   def initialize(flattype, floor, unit, area, postalcode)

@@ -14,11 +14,9 @@ class PropertiesController < ApplicationController
   def create
     @property = Property.new(property_params)
     @property.user = current_user
-    flat_type = get_flattype
-    webscraper = WebScraper.new(flat_type, @property.floor, @property.unit, @property.area, @property.address)
+    webscraper = WebScraper.new(get_flattype, @property.floor, @property.unit, @property.area, @property.address)
     @property.property_value = webscraper.get_property_value
     @property.lease_remaining = webscraper.get_lease_remaining
-
     if @property.save
       redirect_to properties_path
     end
@@ -36,9 +34,5 @@ class PropertiesController < ApplicationController
   def get_flattype
     firstword = @property.flat_type.first
     firstword.to_i.to_s == firstword ? "#{firstword}%20ROOM" : @property.flat_type.upcase
-  end
-
-  def lease_computation
-    lease = 99 - (Date.current.year - @year_completed)
   end
 end
