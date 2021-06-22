@@ -54,6 +54,7 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
 
+    @user_cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first.amount
   end
 
   def scenario_planning
@@ -285,6 +286,8 @@ class PagesController < ApplicationController
     end
     property_projection
   end
+
+
 
   Leasehold_table = [
     [0,0],
