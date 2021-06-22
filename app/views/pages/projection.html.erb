@@ -73,30 +73,89 @@
 <div class="container mt-3">
   <div class="row">
     <div class="col-md">
-      <h4 id="sub-header">Current Inputs</h4>
-      <table>
-        <tr>
-          <td><strong>Year of Birth : </strong></td>
-          <td><%= @user.dob.year %></td>
-        </tr>
-        <tr>
-          <td><strong>Income :</strong> </td>
-          <td>$<%= number_with_delimiter(@user.monthly_income, :delimiter => ',') %></td>
-        </tr>
-        <tr>
-          <td><strong>Expenses :</strong> </td>
-          <td>$<%= number_with_delimiter(@user.monthly_expenses, :delimiter => ',') %></td>
-        </tr>
-        <tr>
-          <td><strong>Inflation :</strong> </td>
-          <td><%= @inflation %>%</td>
-        </tr>
-        <tr>
-          <td><strong>Retirement Age :</strong> </td>
-          <td><%= @retirement_age %> years old</td>
-        </tr>
-      </table>
+      <div class="accordion" id="accordionExample">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-center" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                About Me
+              </button>
+            </h2>
+          </div>
+
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Year of Birth</div>
+                  <div><%= @user.dob.year %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Monthly Income</div>
+                  <div><%= @user.monthly_income %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Monthly Expense</div>
+                  <div><%= @user.monthly_expenses %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Inflation</div>
+                  <div><%= @inflation %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Retirement Age</div>
+                  <div><%= @retirement_age %></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                My Assets
+              </button>
+            </h2>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+              <%= @user_cash %>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Collapsible Group Item #3
+              </button>
+            </h2>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            <div class="card-body">
+              And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingFour">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Collapsible Group Item #4
+              </button>
+            </h2>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+            <div class="card-body">
+              And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
+            </div>
+          </div>
+        </div>
     </div>
+  </div>
+
+
     <div class="col-md">
       <h4 id="sub-header">Refine Projection</h4>
 
@@ -123,5 +182,7 @@
 <div class="landing-btn mt-5">
   <%= link_to "Back to Home", root_path, class: 'btn btn-gradient home-btn' %>
 </div>
+
+
 
 
