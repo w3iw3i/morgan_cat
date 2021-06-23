@@ -1,5 +1,5 @@
 <h3 id="sub-header">Asset Projection</h3>
-<% if user_signed_in? && Asset.exists?(user_id: @user.id) %>
+<% if user_signed_in? %>
   <%
     data = [
     {
