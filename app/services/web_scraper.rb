@@ -26,6 +26,12 @@ class WebScraper
     lease_computation
   end
 
+  def get_display_address
+    addressurl = "https://www.urbanzoom.com/api/v1/location/search?locale=en&housing_type=hdb&search_string=#{@postalcode}"
+    response = HTTParty.get(addressurl).parsed_response["data"][0]
+    response["display_address"].split(",")[0] + ", SINGAPORE #{@postalcode}"
+  end
+
   private
 
   def lease_computation
