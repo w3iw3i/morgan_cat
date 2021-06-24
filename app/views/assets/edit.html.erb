@@ -1,0 +1,14 @@
+<%= simple_form_for(@asset, url: "/update-assets/#{@asset.id}",  html: {width: '100%', id: "asset-form"}) do |f| %>
+  <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Cash', 'Stock', 'Bond', 'CPF-O', 'CPF-S', 'CPF-M'] %>
+  <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
+  <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+  <div class="mb-5">
+    <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+  </div>
+
+  <%= button_to "Confirm",
+    assets_path,
+    class: "btn btn-primary",
+    method: :post
+  %>
+<% end %>
