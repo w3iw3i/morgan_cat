@@ -14,25 +14,39 @@
   <% else %>
   <!-- put a card design and iterate -->
   <div class="asset-cards mt-5">
-    <% @my_asset.each do |asset| %>
+    <% @my_asset.each do |user_asset| %>
      <div class="card">
       <div class="card-body text-center">
-        <h5 class="card-title"><%= asset.asset_type %></h5>
-        <%= image_tag asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
+        <h5 class="card-title"><%= user_asset.asset_type %></h5>
+
+        <%= image_tag user_asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <div>Amount</div>
-            <div><%= asset.amount %> SGD</div>
+            <div><%= user_asset.amount %> SGD</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Growth Rate</div>
-            <div><%= asset.growth_rate %> %</div>
+            <div><%= user_asset.growth_rate %> %</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Asset Allocation</div>
-            <div><%= asset.asset_allocation %> %</div>
+            <div><%= user_asset.asset_allocation %> %</div>
           </li>
+          <br>
+          <div id="edit-remove">
+         <%= link_to "Edit",
+                  "update-assets/#{user_asset.id}",
+                  class: "btn btn-primary",
+                  method: :get
+                  %>
 
+          <%= link_to "Remove",
+                  "delete-assets/#{user_asset.id}",
+                  class: "btn btn-primary",
+                  method: :delete,
+                  data: { confirm: "Are you sure?" } %>
+          </div>
         </ul>
         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
       </div>
@@ -42,7 +56,7 @@
   <% end %>
 </div>
 
-<!-- Modal -->
+<!-- Add Modal -->
 <div class="modal fade" id="addassetmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -81,6 +95,3 @@
 
 
 
-
-
-</div>
