@@ -124,7 +124,32 @@
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
-              $<%= number_with_delimiter(@cash.amount, :delimiter => ',') %>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Cash</div>
+                  <div>$<%= number_with_delimiter(@cash.amount, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Stocks</div>
+                  <div>$<%= number_with_delimiter(@stocks.amount, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>Bonds</div>
+                  <div>$<%= number_with_delimiter(@bonds.amount, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>CPF-O</div>
+                  <div>$<%= number_with_delimiter(@cpfo.amount, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>CPF-S</div>
+                  <div>$<%= number_with_delimiter(@cpfs.amount, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <div>CPF-M</div>
+                  <div>$<%= number_with_delimiter(@cpfm.amount, :delimiter => ',') %></div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -132,7 +157,7 @@
           <div class="card-header" id="headingThree">
             <h2 class="mb-0">
               <button class="btn btn-link btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                Collapsible Group Item #3
+                My Expenses
               </button>
             </h2>
           </div>
@@ -146,7 +171,7 @@
           <div class="card-header" id="headingFour">
             <h2 class="mb-0">
               <button class="btn btn-link btn-block text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                Collapsible Group Item #4
+                My Properties
               </button>
             </h2>
           </div>
