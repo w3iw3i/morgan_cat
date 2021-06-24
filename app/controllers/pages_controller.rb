@@ -259,6 +259,15 @@ class PagesController < ApplicationController
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
 
+  def asset_index
+    @asset = Asset.new
+    @my_asset = Asset.where(user: current_user)
+  end
+
+def asset_params
+    params.require(:asset).permit(:asset_type, :amount, :growth_rate, :asset_allocation)
+  end
+
   def lease_decay(property_projection, lease_remaining, period)
     Leasehold_table
     #search for remaining lease % value of freehold
