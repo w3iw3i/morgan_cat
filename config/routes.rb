@@ -11,8 +11,11 @@ Rails.application.routes.draw do
   post '/create-assets', to: 'assets#create'
   patch '/update-assets/:id', to: 'assets#update'
 
-  resources :properties, only: [:index]
-  post '/create-properties', to: 'properties#create'
+  resources :properties, only: [:index, :create, :edit, :update, :destroy]
+  # post '/create-properties', to: 'properties#create'
+  # get '/update-properties/:id', to: 'properties#edit'
+  # patch '/update-properties/:id', to: 'properties#update'
+  # delete '/delete-properties/:id', to: 'properties#destroy'
 
   resources :users do
     resources :expenses, only: [:index, :create, :destroy]
