@@ -287,8 +287,6 @@ class PagesController < ApplicationController
     property_projection
   end
 
-
-
   Leasehold_table = [
     [0,0],
     [1,3.8],
