@@ -4,7 +4,7 @@
     <!-- Button trigger modal -->
     <div class="align-items-right">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpropertymodal">
-        Add Properties
+        Add Property
       </button>
     </div>
   </div>
@@ -19,10 +19,17 @@
     <% @my_property.each do |property| %>
      <div class="card">
       <div class="card-body text-center">
-        <h5 class="card-title"><%= property.flat_type %></h5>
+        <h5 class="card-title">HDB <%= property.flat_type %></h5>
+        <div>
+          <%= link_to edit_property_path(property.id) do %>
+            <i class="fas fa-pencil-alt"></i> Edit
+          <% end %> | 
+          <%= link_to "properties/#{property.id}", method: :delete, data: { confirm: "Are you sure?" } do %>
+            <i class="far fa-trash-alt"></i> Remove
+          <% end %>
+        </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
-            <div>Address</div>
             <div><%= property.address %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
@@ -66,6 +73,8 @@
             <div><%= property.loan_tenure_years %> years</div>
           </li>
         </ul>
+        <%# <%= link_to "Edit", edit_property_path(property.id), class: "btn btn-primary" %>
+        <%# <%= link_to "Remove", "properties/#{property.id}", class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %>
         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
       </div>
     </div>
@@ -74,19 +83,19 @@
   <% end %>
 </div>
 
-<!-- Modal -->
+<!-- Add Modal -->
 <div class="modal fade" id="addpropertymodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Properties</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Property</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="container">
-          <%= simple_form_for(@property, url: create_properties_path, html: {width: '100%', id: "property-form"}) do |f| %>
+          <%= simple_form_for(@property, url: properties_path, html: {width: '100%', id: "property-form"}) do |f| %>
             <div class="row">
               <div class="col">
                 <%= f.input :postal_code, label: 'Postal Code', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your postal code" %>
@@ -96,7 +105,7 @@
                 <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your Area in sqm" %>
               </div>
               <div class="col">
-                <%= f.input :property_growth_rate, label: 'Property Growth Rate (%)', :input_html => {:style=> 'width: 100%', :value => '2.5 %'}, :required => false %>
+                <%= f.input :property_growth_rate, label: 'Property Growth Rate (%)', :input_html => {:style=> 'width: 100%', :value => '2.5'}, :required => false %>
                 <%= f.input :start_ownership_year, label: 'Starting Ownership Year', :input_html => {:style=> 'width: 100%'}, collection: @start_year..@end_year, :required => false, prompt: "Select Year" %>
                 <%= f.input :original_loan_amount, label: 'Origianl Loan Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter Original Loan Amount" %>
                 <%= f.input :loan_interest_annual, label: 'Annual Loan Interest Rate (%)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter Annual Loan Interest Rate" %>
@@ -107,20 +116,12 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <%# <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> %>
         <button type="submit" class="btn btn-primary" form="property-form">Confirm</button>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 
 
 
