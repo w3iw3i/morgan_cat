@@ -2,9 +2,11 @@
   <div class="d-flex justify-content-between align-items-center my-3">
     <h1 id="property-title">Properties</h1>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpropertymodal">
-      Add Properties
-    </button>
+    <div class="align-items-right">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpropertymodal">
+        Add Properties
+      </button>
+    </div>
   </div>
 
   <% if @my_property.empty? %>
@@ -29,19 +31,19 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Area</div>
-            <div><%= property.area %></div>
+            <div><%= property.area %> sqm</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Floor & Unit</div>
-            <div><%= property.floor %> - <%= property.unit %></div>
+            <div>#<%= property.floor %> - <%= property.unit %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Property Growth Rate</div>
-            <div><%= property.property_growth_rate %></div>
+            <div><%= property.property_growth_rate %> %</div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Property Value</div>
-            <div><%= number_with_delimiter(property.property_value, :delimiter => ',') %> SGD</div>
+            <div>$<%= number_with_delimiter(property.property_value, :delimiter => ',') %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Lease Remaining</div>
@@ -53,7 +55,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Original Loan Amount</div>
-            <div><%= number_with_delimiter(property.original_loan_amount, :delimiter => ',') %> SGD</div>
+            <div>$<%= number_with_delimiter(property.original_loan_amount, :delimiter => ',') %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Annual Loan Interest</div>
@@ -84,26 +86,25 @@
       </div>
       <div class="modal-body">
         <div class="container">
-          <div class="row">
-            <div class="col">
-              <%= simple_form_for(@property, url: create_properties_path, html: {width: '100%', id: "property-form"}) do |f| %>
-              <%= f.input :address, label: 'Address', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type postal code or address"%>
-              <%= f.input :floor, label: 'Floor', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type floor"%>
-              <%= f.input :unit, label: 'Unit', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Unit"%>
-              <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', '5 Room', 'Executive'], prompt: "Select Flat Type" %>
-              <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Area"%>
+          <%= simple_form_for(@property, url: create_properties_path, html: {width: '100%', id: "property-form"}) do |f| %>
+            <div class="row">
+              <div class="col">
+                <%= f.input :postal_code, label: 'Postal Code', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your postal code" %>
+                <%= f.input :floor, label: 'Floor', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your floor number" %>
+                <%= f.input :unit, label: 'Unit', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your unit number" %>
+                <%= f.input :flat_type, label: 'Flat Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['1 Room', '2 Room', '3 Room', '4 Room', '5 Room', 'Executive'], prompt: "Select your Flat Type" %>
+                <%= f.input :area, label: 'Area (sqm)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter your Area in sqm" %>
+              </div>
+              <div class="col">
+                <%= f.input :property_growth_rate, label: 'Property Growth Rate (%)', :input_html => {:style=> 'width: 100%', :value => '2.5 %'}, :required => false %>
+                <%= f.input :start_ownership_year, label: 'Starting Ownership Year', :input_html => {:style=> 'width: 100%'}, collection: @start_year..@end_year, :required => false, prompt: "Select Year" %>
+                <%= f.input :original_loan_amount, label: 'Origianl Loan Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter Original Loan Amount" %>
+                <%= f.input :loan_interest_annual, label: 'Annual Loan Interest Rate (%)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter Annual Loan Interest Rate" %>
+                <%= f.input :loan_tenure_years, label: 'Loan Tenure Years', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Enter Loan Tenure Years" %>
+              </div>
             </div>
-            <div class="col">
-              <%= f.input :property_growth_rate, label: 'Property Growth Rate (%)', :input_html => {:style=> 'width: 100%', :value => '2.5 %'}, :required => false%>
-              <%= f.input :start_ownership_year, label: 'Starting Ownership Year', :input_html => {:style=> 'width: 100%'}, collection: @start_year..@end_year, :required => false, prompt: "Select Year"%>
-              <%= f.input :original_loan_amount, label: 'Origianl Loan Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Original Loan Amount"%>
-              <%= f.input :loan_interest_annual, label: 'Annual Loan Interest Rate (%)', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Annual Loan Interest Rate" %>
-              <%= f.input :loan_tenure_years, label: 'Loan Tenure Years', :input_html => {:style=> 'width: 100%'}, :required => false, placeholder: "Type Loan Tenure Years" %>
-              <% end %>
-            </div>
-          </div>
+          <% end %>
         </div>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

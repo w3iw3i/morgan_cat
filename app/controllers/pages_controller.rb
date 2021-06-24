@@ -12,9 +12,9 @@ class PagesController < ApplicationController
     projection_constants
     projection_arrays
     projection_calcs
+    user_assets
 
-    if user_signed_in? && Asset.exists?(user_id: @user.id)
-      user_assets
+    if user_signed_in?
 
       # Create asset_projections
       projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
@@ -28,23 +28,22 @@ class PagesController < ApplicationController
       prop_list = Property.where(user_id: current_user.id)
       prop_list.each_with_index do |property, index|
 
-      @property_data[index] = []
+        @property_data[index] = []
 
-      # Factor in values for each property
-      @loan_amount = property.original_loan_amount
-      @loan_interest_annual = property.loan_interest_annual
-      @loan_tenure_years = property.loan_tenure_years
-      @start_ownership_year = property.start_ownership_year
+        # Factor in values for each property
+        @loan_amount = property.original_loan_amount
+        @loan_interest_annual = property.loan_interest_annual
+        @loan_tenure_years = property.loan_tenure_years
+        @start_ownership_year = property.start_ownership_year
 
-      projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
+        projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
 
-      # Account for Property Lease Decay
-      @property_data[index] = lease_decay(@property_data[index], 80, @period)
+        # Account for Property Lease Decay
+        @property_data[index] = lease_decay(@property_data[index], 80, @period)
 
-      # Account for home loan / home equity
-      loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
-      @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
-
+        # Account for home loan / home equity
+        @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
+        @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
       end
 
     else
@@ -54,7 +53,7 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
 
-    @user_cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first.amount
+    # @user_cash = get_user_asset("Cash") || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
   end
 
   def scenario_planning
@@ -231,14 +230,31 @@ class PagesController < ApplicationController
     future_value = (present_value + saving * 12) * (1 + (rate / 100))
   end
 
+  def get_user_asset(asset)
+    Asset.where(user_id: current_user.id, asset_type: asset).first
+  end
+
+  def default_asset(asset)
+    Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0, asset_type: asset)
+  end
+
   def user_assets
     # Pull the relevant asset information for the user
-    @cash = Asset.where(user_id: current_user.id, asset_type: "Cash").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @stocks = Asset.where(user_id: current_user.id, asset_type: "Stock").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @bonds = Asset.where(user_id: current_user.id, asset_type: "Bond").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfo = Asset.where(user_id: current_user.id, asset_type: "CPF-O").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfs = Asset.where(user_id: current_user.id, asset_type: "CPF-S").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
-    @cpfm = Asset.where(user_id: current_user.id, asset_type: "CPF-M").first || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+    if user_signed_in?
+      @cash = get_user_asset("Cash") || default_asset("Cash")
+      @stocks = get_user_asset("Stock") || default_asset("Stock")
+      @bonds = get_user_asset("Bond") || default_asset("Bond")
+      @cpfo = get_user_asset("CPF-O") || default_asset("CPF-O")
+      @cpfs = get_user_asset("CPF-S") || default_asset("CPF-S")
+      @cpfm = get_user_asset("CPF-M") || default_asset("CPF-M")
+    else
+      @cash = default_asset("Cash")
+      @stocks = default_asset("Stock")
+      @bonds = default_asset("Bond")
+      @cpfo = default_asset("CPF-O")
+      @cpfs = default_asset("CPF-S")
+      @cpfm = default_asset("CPF-M")
+    end
     # Find cash allocation
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
@@ -269,10 +285,10 @@ class PagesController < ApplicationController
         @principal_paid_annual.last[1] += @principal
         @payment_month += 1
       end
-    @principal_paid_cumulative += @principal_paid_annual.last[1]
-    @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
-    @start_year += 1
-  end
+      @principal_paid_cumulative += @principal_paid_annual.last[1]
+      @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
+      @start_year += 1
+    end
     @loan_outstanding_cumulative
   end
 

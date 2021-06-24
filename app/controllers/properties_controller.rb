@@ -14,11 +14,10 @@ class PropertiesController < ApplicationController
   def create
     @property = Property.new(property_params)
     @property.user = current_user
-    flat_type = get_flattype
-    webscraper = WebScraper.new(flat_type, @property.floor, @property.unit, @property.area, @property.address)
+    webscraper = WebScraper.new(get_flattype, @property.floor, @property.unit, @property.area, @property.postal_code)
     @property.property_value = webscraper.get_property_value
     @property.lease_remaining = webscraper.get_lease_remaining
-
+    @property.address = webscraper.get_display_address
     if @property.save
       redirect_to properties_path
     end
@@ -30,15 +29,11 @@ class PropertiesController < ApplicationController
   private
 
   def property_params
-    params.require(:property).permit(:address, :floor, :unit, :property_growth_rate, :property_value, :flat_type, :area, :loan_tenure_years, :loan_interest_annual, :start_ownership_year, :original_loan_amount)
+    params.require(:property).permit(:address, :postal_code, :floor, :unit, :property_growth_rate, :property_value, :flat_type, :area, :loan_tenure_years, :loan_interest_annual, :start_ownership_year, :original_loan_amount)
   end
 
   def get_flattype
     firstword = @property.flat_type.first
     firstword.to_i.to_s == firstword ? "#{firstword}%20ROOM" : @property.flat_type.upcase
-  end
-
-  def lease_computation
-    lease = 99 - (Date.current.year - @year_completed)
   end
 end
