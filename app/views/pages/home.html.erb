@@ -3,12 +3,12 @@
 </div> -->
 
 <div class="row mt-5">
-  <div class="col-4">
-    <%= image_tag 'couple.png', class: '', width: "600px" %>
+  <div class="col-6">
+    <%= image_tag 'couple.png', width: "100%" %>
   </div>
-  <div class="col-8">
+  <div class="col-6">
     <div class="landing-title">
-      <h3>Take the first step to build your <strong>FREE</strong> financial plan</h3>
+      <h2>Take the first step to build your <strong>FREE</strong> financial plan</h2>
     </div>
     <%= simple_form_for(@user, method: :get, url: projection_path, wrapper: :horizontal_form) do |f| %>
       <%= f.error_notification %>
