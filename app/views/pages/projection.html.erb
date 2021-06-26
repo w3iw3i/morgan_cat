@@ -4,15 +4,15 @@
     data = [
     {
       name: "Cash",
-      data: @projected_amt
+      data: @cash_projection_view
     },
     {
       name: "Stocks",
-      data: @stocks_projection
+      data: @stocks_projection_view
     },
     {
       name: "Bonds",
-      data: @bonds_projection
+      data: @bonds_projection_view
     },
     {
       name: "CPF-Ordinary",
@@ -180,8 +180,8 @@
               <ul class="list-group list-group-flush">
                <% @input_properties.each do |input_property| %>
                   <li class="list-group-item d-flex justify-content-between">
-                    <div><%= input_property.expense_type %></div>
-                    <div>$<%= number_with_delimiter(input_property.amount, :delimiter => ',') %></div>
+                    <div>Property Value</div>
+                    <div>$<%= number_with_delimiter(input_property.property_value, :delimiter => ',') %></div>
                   </li>
                 <% end %>
               <% end %>
@@ -193,8 +193,35 @@
 
 
     <div class="col-md">
-      <h4 id="sub-header">Refine Projection</h4>
+      <h4 id="sub-header">Portfolio Optimization</h4>
+        <ul>
+          <li>Your portfolio is <strong> <%= @readout %></strong>  </li>
+          <% if @readout == "conservative" %>
+            <li>A low-risk target allocation could mean <%= number_to_currency(@stock60_scenario[0] - @baseline_scenario[0], unit: '$', separator: ",", precision: 0) %> more by retirement </li>
+            <li>A medium-risk target allocation could mean <%= number_to_currency(@stock80_scenario[0] - @baseline_scenario[0], unit: '$', separator: ",", precision: 0) %> more by retirement </li>
+            <% if @cash.asset_allocation > 50 %>
+              <li>You have a high cash position of <%= @cash.asset_allocation%>%, which can be unfavorable to your long term results</li>
+            <% end %>
+          <% elsif @readout == "balanced" %>
+            <li>A low-risk target allocation would yield <%= number_to_currency(@baseline_scenario[0] - @stock60_scenario[0] , unit: '$', separator: ",", precision: 0) %> less by retirement </li>
+            <li>A medium-risk target allocation could mean <%= number_to_currency(@stock80_scenario[0] - @baseline_scenario[0], unit: '$', separator: ",", precision: 0) %> more by retirement </li>
+            <% if @cash.asset_allocation > 25 %>
+              <li>Your cash position of <%= @cash.asset_allocation%>% tends to be on the high side and could be a drag on performance</li>
+            <% end %>
+          <% else %>
+             <li>A medium-risk target allocation would yield <%= number_to_currency(@baseline_scenario[0] - @stock80_scenario[0] , unit: '$', separator: ",", precision: 0) %> less by retirement </li>
+             <li>You have a high stock position of <%= @stocks.asset_allocation%>%, which can be subject to bouts of short-term volatility</li>
+             <li>Since WWII, we have averaged a market drop of at least 20% roughly every 8 years. These drops typically take 24 months on average to recover</li>
+          <% end %>
+        </ul>
 
+      <h4 id="sub-header">Home Equity Management</h4>
+        <ul>
+          <li>The equity on your home lease is projected to grow <%= number_with_precision(@property_cagr, precision: 1) %>% annually until retirement. </li>
+          <li>This computation combines annual asset appreciation of <%= @property_growth %>%, projected lease decay and your home loan terms</li>
+          <li>You will own 50% of your home lease by <%= @half_owned_year %> (<%= @half_owned_year.to_i - @start_ownership_year %> years after start of loan) and 100% by <%= @start_ownership_year + @loan_tenure_years - 1  %> </li>
+          <li>The price of the home lease is projected to peak in {year} across the remaining tenure of your lease</li>
+        </ul>
       <div class="">
 
         <% if user_signed_in? %>
