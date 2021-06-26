@@ -6,9 +6,13 @@
     <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
   </div>
 
-  <%= button_to "Confirm",
-    assets_path,
-    class: "btn btn-primary",
-    method: :post
-  %>
+  <div class="text-center my-3">
+    <%= button_to "Confirm",
+      assets_path,
+      class: "btn btn-primary",
+      method: :post
+    %>
+    <%= link_to "Cancel", assets_path, class: 'btn btn-danger' %>
+  </div>
+
 <% end %>

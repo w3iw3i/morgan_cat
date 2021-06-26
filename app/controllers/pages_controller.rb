@@ -19,6 +19,11 @@ class PagesController < ApplicationController
 
     if user_signed_in?
 
+      # Cash allocation
+      @other_assets = @stocks.asset_allocation + @bonds.asset_allocation + @cpfo.asset_allocation + @cpfs.asset_allocation + @cpfm.asset_allocation
+      @cash.update(asset_allocation: 100 - @other_assets)
+
+
       # Create asset_projections
       projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
       projection_machine(@period, @year, (@stocks.growth_rate-@inflation), (@stocks.amount + @value), @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)

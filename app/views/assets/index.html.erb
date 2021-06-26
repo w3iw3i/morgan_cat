@@ -2,9 +2,17 @@
   <div class="d-flex justify-content-between align-items-center my-3">
     <h1 id="asset-title">Assets</h1>
     <!-- Button trigger modal -->
+
+    <%# <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addcashmodal">
+      Add Cash
+    </button> %>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addassetmodal">
       Add Assets
     </button>
+
+
+
   </div>
 
   <% if @my_asset.empty? %>
@@ -18,12 +26,21 @@
      <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title"><%= user_asset.asset_type %></h5>
-
-        <%= image_tag user_asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
+        <div>
+          <%= link_to "update-assets/#{user_asset.id}" do %>
+            <i class="fas fa-pencil-alt"></i> Edit
+          <% end %> | 
+          <%= link_to "delete-assets/#{user_asset.id}", method: :delete, data: { confirm: "Are you sure?" } do %>
+            <i class="far fa-trash-alt"></i> Remove
+          <% end %>
+        </div>
+        <div class="mt-3">
+          <%= image_tag user_asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
+        </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <div>Amount</div>
-            <div><%= user_asset.amount %> SGD</div>
+            <div>$<%= number_with_delimiter(user_asset.amount, :delimiter => ',') %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Growth Rate</div>
@@ -34,6 +51,7 @@
             <div><%= user_asset.asset_allocation %> %</div>
           </li>
           <br>
+          <!--
           <div id="edit-remove">
          <%= link_to "Edit",
                   "update-assets/#{user_asset.id}",
@@ -47,6 +65,7 @@
                   method: :delete,
                   data: { confirm: "Are you sure?" } %>
           </div>
+          -->
         </ul>
         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
       </div>
@@ -56,12 +75,12 @@
   <% end %>
 </div>
 
-<!-- Add Modal -->
+<!-- Add Non-Cash Modal -->
 <div class="modal fade" id="addassetmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Assets</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Non-Cash Assets</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -69,11 +88,43 @@
       <div class="modal-body">
         <div class="">
           <%= simple_form_for(@asset, url: create_assets_path, html: {width: '100%', id: "asset-form"}) do |f| %>
-          <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Cash', 'Stock', 'Bond', 'CPF-O', 'CPF-S', 'CPF-M'] %>
+          <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%'}, :required => false, collection: @remaining_asset_types %>
           <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
           <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
           <div class="mb-5">
             <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          </div>
+          <% end %>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <%# <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> %>
+        <button type="submit" class="btn btn-primary" form="asset-form">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Cash Modal
+<div class="modal fade" id="addcashmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Cash</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <%= simple_form_for(@asset, url: create_assets_path, html: {width: '100%', id: "asset-form"}) do |f| %>
+          <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%', value: 'Cash'}, :required => false, disabled:true %>
+          <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
+          <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+          <div class="mb-5">
+            <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%', value: @cash.first.asset_allocation}, disabled: true %>
           </div>
           <% end %>
         </div>
@@ -86,7 +137,13 @@
     </div>
   </div>
 </div>
+-->
 
+<br>
+
+<div class="landing-btn mt-5">
+  <%= link_to "Back", projection_path, class: 'btn btn-primary' %>
+</div>
 
 
 
