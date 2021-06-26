@@ -40,7 +40,7 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <div>Amount</div>
-            <div><%= user_asset.amount %> SGD</div>
+            <div>$<%= number_with_delimiter(user_asset.amount, :delimiter => ',') %></div>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <div>Growth Rate</div>
