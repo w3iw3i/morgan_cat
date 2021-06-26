@@ -23,14 +23,18 @@ class PagesController < ApplicationController
       @other_assets = @stocks.asset_allocation + @bonds.asset_allocation + @cpfo.asset_allocation + @cpfs.asset_allocation + @cpfm.asset_allocation
       @cash.update(asset_allocation: 100 - @other_assets)
 
+      # Default CPF assumptions
+      @cpfo.update(asset_allocation: 12, growth_rate: 2.5)
+      @cpfs.update(asset_allocation: 3, growth_rate: 4)
+      @cpfm.update(asset_allocation: 5, growth_rate: 4)
 
       # Create asset_projections
       projection_machine(@period, @year, (@rate-@inflation), (@cash.amount + @value), @cash.asset_allocation * 0.01 * @monthly_savings, @projected_amt, "Cash")
       projection_machine(@period, @year, (@stocks.growth_rate-@inflation), (@stocks.amount + @value), @stocks.asset_allocation * 0.01 * @monthly_savings, @stocks_projection)
       projection_machine(@period, @year, (@bonds.growth_rate-@inflation), (@bonds.amount + @value), @bonds.asset_allocation * 0.01 * @monthly_savings, @bonds_projection)
-      projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), (@cpfo.amount + @value), @cpfo.asset_allocation * 0.01 * @monthly_savings, @cpfo_projection)
-      projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), (@cpfs.amount + @value), @cpfs.asset_allocation * 0.01 * @monthly_savings, @cpfs_projection)
-      projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), (@cpfm.amount + @value), @cpfm.asset_allocation * 0.01 * @monthly_savings, @cpfm_projection)
+      projection_machine(@period, @year, (@cpfo.growth_rate-@inflation), (@cpfo.amount + @value), @cpfo.asset_allocation * 0.01 * 1.85 * @monthly_savings, @cpfo_projection)
+      projection_machine(@period, @year, (@cpfs.growth_rate-@inflation), (@cpfs.amount + @value), @cpfs.asset_allocation * 0.01 * 1.85 * @monthly_savings, @cpfs_projection)
+      projection_machine(@period, @year, (@cpfm.growth_rate-@inflation), (@cpfm.amount + @value), @cpfm.asset_allocation * 0.01 * 1.85 * @monthly_savings, @cpfm_projection)
 
       # Find the list of properties belonging to the user
       prop_list = Property.where(user_id: current_user.id)
