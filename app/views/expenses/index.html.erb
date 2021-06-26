@@ -6,7 +6,7 @@
     <%= f.input :expense_type, label: 'Expense Type: ', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Car', 'Wedding', 'House - Downpayment', 'House - Renovation', 'Child - Birth', 'Child - Education', 'Education', 'Business', 'Other'] %>
     <%= f.input :year_int, label: 'Year: ', :input_html => {:style=> 'width: 100%'}, collection: 2021..2080, :required => false%>
     <%= f.input :amount, label: 'Present-Day Expense ($): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
-    <%= f.button :submit, "Add Expense",class: "btn btn-secondary", id:"submit-expenses"%>
+    <%= f.button :submit, "Add Expense",class: "btn btn-primary", id:"submit-expenses"%>
   <% end %>
 
 </div>
@@ -43,5 +43,9 @@
 
 </table>
 
+<br>
 
+<div class="landing-btn mt-5">
+  <%= link_to "Back", projection_path, class: 'btn btn-primary' %>
+</div>
 
