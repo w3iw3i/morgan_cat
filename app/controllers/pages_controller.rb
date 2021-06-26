@@ -13,6 +13,9 @@ class PagesController < ApplicationController
     projection_arrays
     projection_calcs
     user_assets
+    get_input_assets
+    get_input_expenses
+    get_input_properties
 
     if user_signed_in?
 
@@ -259,14 +262,6 @@ class PagesController < ApplicationController
     # @cash_allocation = 100 - Asset.where(user_id: current_user.id).sum(:asset_allocation)
   end
 
-  def asset_index
-    @asset = Asset.new
-    @my_asset = Asset.where(user: current_user)
-  end
-
-def asset_params
-    params.require(:asset).permit(:asset_type, :amount, :growth_rate, :asset_allocation)
-  end
 
   def lease_decay(property_projection, lease_remaining, period)
     Leasehold_table
@@ -311,6 +306,20 @@ def asset_params
     end
     property_projection
   end
+
+def get_input_assets
+  @input_assets = Asset.where(user_id: current_user.id)
+end
+
+
+def get_input_expenses
+  @input_expenses = Expense.where(user_id: current_user.id)
+end
+
+def get_input_properties
+  @input_properties = Property.where(user_id: current_user.id)
+end
+
 
   Leasehold_table = [
     [0,0],
