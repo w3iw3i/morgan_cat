@@ -125,30 +125,12 @@
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
               <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>Cash</div>
-                  <div>$<%= number_with_delimiter(@cash.amount, :delimiter => ',') %></div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>Stocks</div>
-                  <div>$<%= number_with_delimiter(@stocks.amount, :delimiter => ',') %></div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>Bonds</div>
-                  <div>$<%= number_with_delimiter(@bonds.amount, :delimiter => ',') %></div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>CPF-O</div>
-                  <div>$<%= number_with_delimiter(@cpfo.amount, :delimiter => ',') %></div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>CPF-S</div>
-                  <div>$<%= number_with_delimiter(@cpfs.amount, :delimiter => ',') %></div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                  <div>CPF-M</div>
-                  <div>$<%= number_with_delimiter(@cpfm.amount, :delimiter => ',') %></div>
-                </li>
+                <% @input_assets.each do |input_asset| %>
+                  <li class="list-group-item d-flex justify-content-between">
+                    <div><%= input_asset.asset_type %></div>
+                    <div>$<%= number_with_delimiter(input_asset.amount, :delimiter => ',') %></div>
+                  </li>
+                <% end %>
               </ul>
             </div>
           </div>
@@ -163,7 +145,20 @@
           </div>
           <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
             <div class="card-body">
-              And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
+              <% if @input_expenses.empty? %>
+                <div class="text-center">
+                  <i class="far fa-folder-open"></i> Empty
+                </div>
+              <% else %>
+              <ul class="list-group list-group-flush">
+               <% @input_expenses.each do |input_expense| %>
+                  <li class="list-group-item d-flex justify-content-between">
+                    <div><%= input_expense.expense_type %></div>
+                    <div>$<%= number_with_delimiter(input_expense.amount, :delimiter => ',') %></div>
+                  </li>
+                <% end %>
+              <% end %>
+              </ul>
             </div>
           </div>
         </div>
@@ -177,7 +172,19 @@
           </div>
           <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
             <div class="card-body">
-              And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
+              <% if @input_properties.empty? %>
+                <div class="text-center">
+                  <i class="far fa-folder-open"></i> Empty
+                </div>
+              <% else %>
+              <ul class="list-group list-group-flush">
+               <% @input_properties.each do |input_property| %>
+                  <li class="list-group-item d-flex justify-content-between">
+                    <div><%= input_property.expense_type %></div>
+                    <div>$<%= number_with_delimiter(input_property.amount, :delimiter => ',') %></div>
+                  </li>
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>
@@ -196,8 +203,10 @@
             <p><%= link_to "Add Expenses", user_expenses_path(@user.id), class: 'btn btn-gradient' %></p>
             <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
           </div>
-            <p><%= link_to "Home Equity Computation", property_path, class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Scenario Planning", scenario_planning_path, class: 'btn btn-gradient btn-block' %></p>
+          <div class="">
+            <p><%= link_to "Home Equity Computation", property_path, class: 'btn btn-gradient w-100' %></p>
+            <p><%= link_to "Scenario Planning", scenario_planning_path, class: 'btn btn-gradient btn-block w-100' %></p>
+          </div>
         <% else %>
           <div class="landing-btn">
             <%= link_to "Sign up to customise", new_user_registration_path(dob: @user.dob, monthly_income: @user.monthly_income, monthly_expenses: @user.monthly_expenses), class: 'btn btn-gradient' %>
@@ -207,11 +216,15 @@
   </div>
 </div>
 
+<<<<<<< HEAD
+
+=======
 <% if !user_signed_in? %>
   <div class="landing-btn mt-5">
     <%= link_to "Back to Main", root_path, class: 'btn btn-primary' %>
   </div>
 <% end %>
+>>>>>>> master
 
 
 

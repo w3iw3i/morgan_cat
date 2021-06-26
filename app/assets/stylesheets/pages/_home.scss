@@ -99,6 +99,12 @@ body {
   grid-gap: 16px;
 }
 
+.other-buttons{
+  display: grid;
+  grid-template-columns:1fr 1fr;
+  grid-gap: 16px;
+}
+
 .btn-primary {
   background-color:#955196;
   border-radius: 8px;
