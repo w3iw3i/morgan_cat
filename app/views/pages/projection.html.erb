@@ -207,10 +207,11 @@
   </div>
 </div>
 
-
-<div class="landing-btn mt-5">
-  <%= link_to "Back to Home", root_path, class: 'btn btn-gradient home-btn' %>
-</div>
+<% if !user_signed_in? %>
+  <div class="landing-btn mt-5">
+    <%= link_to "Back to Main", root_path, class: 'btn btn-primary' %>
+  </div>
+<% end %>
 
 
 

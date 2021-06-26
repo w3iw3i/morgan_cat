@@ -2,9 +2,11 @@
   <div class="d-flex justify-content-between align-items-center my-3">
     <h1 id="asset-title">Assets</h1>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addassetmodal">
-      Add Assets
-    </button>
+    <div class="align-items-right">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addassetmodal">
+        Add Assets
+      </button>
+    </div>
   </div>
 
   <% if @my_asset.empty? %>
@@ -18,8 +20,17 @@
      <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title"><%= user_asset.asset_type %></h5>
-
-        <%= image_tag user_asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
+        <div>
+          <%= link_to "update-assets/#{user_asset.id}" do %>
+            <i class="fas fa-pencil-alt"></i> Edit
+          <% end %> | 
+          <%= link_to "delete-assets/#{user_asset.id}", method: :delete, data: { confirm: "Are you sure?" } do %>
+            <i class="far fa-trash-alt"></i> Remove
+          <% end %>
+        </div>
+        <div class="mt-3">
+          <%= image_tag user_asset.asset_type + ".png", alt: "asset-image", width: "72px" %>
+        </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <div>Amount</div>
@@ -34,6 +45,7 @@
             <div><%= user_asset.asset_allocation %> %</div>
           </li>
           <br>
+          <!--
           <div id="edit-remove">
          <%= link_to "Edit",
                   "update-assets/#{user_asset.id}",
@@ -47,6 +59,7 @@
                   method: :delete,
                   data: { confirm: "Are you sure?" } %>
           </div>
+          -->
         </ul>
         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
       </div>
@@ -80,14 +93,18 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <%# <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> %>
         <button type="submit" class="btn btn-primary" form="asset-form">Confirm</button>
       </div>
     </div>
   </div>
 </div>
 
+<br>
 
+<div class="landing-btn mt-5">
+  <%= link_to "Back", projection_path, class: 'btn btn-primary' %>
+</div>
 
 
 
