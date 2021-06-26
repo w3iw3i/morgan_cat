@@ -37,13 +37,13 @@
           <div id="edit-remove">
          <%= link_to "Edit",
                   "update-assets/#{user_asset.id}",
-                  class: "btn btn-primary",
+                  class: "btn btn-primary edit-remove",
                   method: :get
                   %>
 
           <%= link_to "Remove",
                   "delete-assets/#{user_asset.id}",
-                  class: "btn btn-primary",
+                  class: "btn btn-primary edit-remove",
                   method: :delete,
                   data: { confirm: "Are you sure?" } %>
           </div>
