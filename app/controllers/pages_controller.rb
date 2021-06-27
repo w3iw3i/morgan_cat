@@ -77,7 +77,22 @@ class PagesController < ApplicationController
         end
       end
 
+      @property_max_value = []
+      primary_residence = Property.where(user_id: current_user.id).first
+      projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_max_value)
+      @property_max_value = lease_decay(@property_max_value, primary_residence.lease_remaining, @period)
+      @max_value = [[0,0]]
+      @property_max_value.each do |year_pair|
+        if year_pair[1] > @max_value.last[1]
+          @max_value << year_pair
+        end
+      end
+      @property_readout = property_readout
 
+      # loan savings refinance
+      @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
+      @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+      @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
     else
       # For new user / user who do not sign in
       # Create cash_projections
@@ -99,6 +114,16 @@ class PagesController < ApplicationController
     end
   end
 
+  def property_readout
+    if @property_cagr <= 2.5
+      return "poor"
+    elsif @property_cagr > 2.5 && @property_cagr < 7
+      return "average"
+    else
+      return "high"
+    end
+  end
+
   def scenario_planning
     if user_signed_in?
       @user = get_user_projection
@@ -116,7 +141,7 @@ class PagesController < ApplicationController
     projection_calcs
     primary_residence = Property.where(user_id: current_user.id).first
 
-    projection_machine(@period, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_projection)
+    projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_projection)
     @property_growth = @property_projection.deep_dup
     @property_growth_decay = lease_decay(@property_projection, primary_residence.lease_remaining, @period).deep_dup
 
