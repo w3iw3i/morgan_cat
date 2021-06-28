@@ -57,7 +57,7 @@
 
 <% else %>
   <%= column_chart @projected_amt,
-      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600"],
+      colors: ["#003f5c"],
       stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
       library: {
         yAxis: {
@@ -103,6 +103,10 @@
                   <div>$<%= number_with_delimiter(@user.monthly_expenses, :delimiter => ',') %></div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
+                  <div>Annual Savings</div>
+                  <div>$<%= number_with_delimiter((@user.monthly_income - @user.monthly_expenses) * 12, :delimiter => ',') %></div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
                   <div>Inflation</div>
                   <div><%= @inflation %> %</div>
                 </li>
@@ -124,6 +128,11 @@
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
+              <% if @input_assets.empty? %>
+                <div class="text-center">
+                  <i class="far fa-folder-open"></i> Empty
+                </div>
+              <% else %>
               <ul class="list-group list-group-flush">
                 <% @input_assets.each do |input_asset| %>
                   <li class="list-group-item d-flex justify-content-between">
@@ -131,6 +140,7 @@
                     <div>$<%= number_with_delimiter(input_asset.amount, :delimiter => ',') %></div>
                   </li>
                 <% end %>
+              <% end %>
               </ul>
             </div>
           </div>
@@ -151,7 +161,7 @@
                 </div>
               <% else %>
               <ul class="list-group list-group-flush">
-               <% @input_expenses.each do |input_expense| %>
+                <% @input_expenses.each do |input_expense| %>
                   <li class="list-group-item d-flex justify-content-between">
                     <div><%= input_expense.expense_type %></div>
                     <div>$<%= number_with_delimiter(input_expense.amount, :delimiter => ',') %></div>
@@ -191,7 +201,7 @@
     </div>
   </div>
 
-
+  <% if user_signed_in? %>
     <div class="col-md">
       <h4 id="sub-header">Portfolio Optimization</h4>
         <ul>
@@ -233,8 +243,8 @@
           <li>You will own 50% of your home lease by <%= @half_owned_year %> (<%= @half_owned_year.to_i - @start_ownership_year %> years after start of loan) and 100% by <%= @start_ownership_year + @loan_tenure_years - 1  %> </li>
           <li>The price of the home lease is projected to peak in <strong><%= @max_value.last[0] %></strong> across the remaining tenure of your lease</li>
         </ul>
+  <% end %>
       <div class="">
-
         <% if user_signed_in? %>
           <div class="add-buttons">
             <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>

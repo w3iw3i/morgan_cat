@@ -20,15 +20,20 @@
                 label: "Monthly Expenses",
                 placeholder: "Please input your monthly expenses",
                 required: false %>
+    <%= f.input :target_retirement_age, 
+                label: "Target Retirement Age",
+                placeholder: "Please input your target retirement age",
+                default: 65,
+                required: false %>
     <%= f.input :password,
-                hint: "leave it blank if you don't want to change it",
+                hint: "eave it blank if you don't want to change it",
                 required: false,
                 input_html: { autocomplete: "new-password" } %>
     <%= f.input :password_confirmation,
                 required: false,
                 input_html: { autocomplete: "new-password" } %>
     <%= f.input :current_password,
-                hint: "we need your current password to confirm your changes",
+                hint: "Please input your current password to confirm your changes",
                 required: true,
                 input_html: { autocomplete: "current-password" } %>
   </div>
