@@ -47,17 +47,52 @@ class PagesController < ApplicationController
         @loan_interest_annual = property.loan_interest_annual
         @loan_tenure_years = property.loan_tenure_years
         @start_ownership_year = property.start_ownership_year
+        @property_growth = property.property_growth_rate
 
-        projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_data[index])
+        projection_machine(@period, @year, (@property_growth-@inflation), property.property_value, 0, @property_data[index])
 
         # Account for Property Lease Decay
-        @property_data[index] = lease_decay(@property_data[index], 80, @period)
+        @property_data[index] = lease_decay(@property_data[index], property.lease_remaining, @period)
+        @net_property_value = @property_data[index].deep_dup
 
         # Account for home loan / home equity
         @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
         @property_data[index] = home_equity(@property_data[index], @loan_outstanding_cumulative)
       end
 
+      # Portfolio readout
+      @cash_projection_view = @projected_amt.deep_dup
+      @stocks_projection_view = @stocks_projection.deep_dup
+      @bonds_projection_view = @bonds_projection.deep_dup
+      @readout = portfolio_readout
+
+      # Property readout
+      @absolute_roi = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
+      @property_cagr = ((1+ @absolute_roi)**(1.to_f / @period) - 1) * 100
+
+      @net_property_value.each_with_index do |year_pair, index|
+        if @property_data[0][index][1] * 2 > year_pair[1]
+          @half_owned_year = year_pair[0]
+          break
+        end
+      end
+
+      @property_max_value = []
+      primary_residence = Property.where(user_id: current_user.id).first
+      projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_max_value)
+      @property_max_value = lease_decay(@property_max_value, primary_residence.lease_remaining, @period)
+      @max_value = [[0,0]]
+      @property_max_value.each do |year_pair|
+        if year_pair[1] > @max_value.last[1]
+          @max_value << year_pair
+        end
+      end
+      @property_readout = property_readout
+
+      # loan savings refinance
+      @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
+      @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+      @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
     else
       # For new user / user who do not sign in
       # Create cash_projections
@@ -65,7 +100,28 @@ class PagesController < ApplicationController
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
 
-    # @user_cash = get_user_asset("Cash") || Asset.new(amount: 0, asset_allocation: 0, growth_rate: 0)
+  end
+
+  def portfolio_readout
+    scenarios
+
+    if @baseline_scenario[0] < @stock60_scenario[0]
+      return "conservative"
+    elsif (@baseline_scenario[0] >= @stock60_scenario[0]) && (@baseline_scenario[0] < @stock80_scenario[0])
+      return "balanced"
+    else
+      return "aggressive"
+    end
+  end
+
+  def property_readout
+    if @property_cagr <= 2.5
+      return "poor"
+    elsif @property_cagr > 2.5 && @property_cagr < 7
+      return "average"
+    else
+      return "high"
+    end
   end
 
   def scenario_planning
@@ -83,22 +139,42 @@ class PagesController < ApplicationController
     projection_constants
     projection_arrays
     projection_calcs
+    primary_residence = Property.where(user_id: current_user.id).first
 
-    projection_machine(@period, @year, (2.5-@inflation), @prop_current_value, 0, @property_projection)
+    projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_projection)
     @property_growth = @property_projection.deep_dup
-    @property_growth_decay = lease_decay(@property_projection, 80, @period).deep_dup
+    @property_growth_decay = lease_decay(@property_projection, primary_residence.lease_remaining, @period).deep_dup
 
-    # temp values
-    @loan_amount = 315000
-    @loan_interest_annual = 0.050
-    @loan_tenure_years = 20
-    @start_ownership_year = 2020
+    # loan values
+    @loan_amount = primary_residence.original_loan_amount
+    @loan_interest_annual = primary_residence.loan_interest_annual
+    @loan_tenure_years = primary_residence.loan_tenure_years
+    @start_ownership_year = primary_residence.start_ownership_year
 
     @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
     @home_equity =  home_equity(@property_projection, @loan_outstanding_cumulative)
   end
 
   private
+
+  def scenarios
+    projection_constants
+    user_assets
+    @scenario_hash = {
+      average: [@rate-@inflation, @stocks_average, @bonds_average],
+      top90_percentile: [@rate-@inflation, @stocks_90, @bonds_90],
+      bottom10_percentile: [@rate-@inflation, @stocks_10, @bonds_10]
+    }
+    @baseline_scenario = []
+    @stock80_scenario = []
+    @stock60_scenario = []
+
+    # User Baseline Scenario
+    scenario_engine(@baseline_scenario, @cash.asset_allocation, @stocks.asset_allocation, @bonds.asset_allocation)
+    scenario_engine(@stock80_scenario, 10, 80, 10)
+    scenario_engine(@stock60_scenario, 10, 60, 30)
+
+  end
 
   def scenario_engine(scenario_array, cash_allocation, stocks_allocation, bonds_allocation)
     @scenario_hash.each do |key, value|
@@ -125,6 +201,7 @@ class PagesController < ApplicationController
 
   def projection_machine(period, year, inflation_adj_ror, value, monthly_contribution, asset_array, asset_type="Noncash")
     expenses = Expense.where(user_id: current_user.id).select([:year_int, :inflated_amt]) if user_signed_in?
+    @year_counter = 0
     period.times do
       value = compound(value, inflation_adj_ror, monthly_contribution).round
       if asset_type == "Cash"
@@ -135,28 +212,10 @@ class PagesController < ApplicationController
         end
       end
       asset_array.append([year.to_s, value])
+      #if ((year) % 5 == 0 || year == Date.today.year)
       year += 1
     end
     value
-  end
-
-  def scenarios
-    projection_constants
-    user_assets
-    @scenario_hash = {
-      average: [@rate-@inflation, @stocks_average, @bonds_average],
-      top90_percentile: [@rate-@inflation, @stocks_90, @bonds_90],
-      bottom10_percentile: [@rate-@inflation, @stocks_10, @bonds_10]
-    }
-    @baseline_scenario = []
-    @stock80_scenario = []
-    @stock60_scenario = []
-
-    # User Baseline Scenario
-    scenario_engine(@baseline_scenario, @cash.asset_allocation, @stocks.asset_allocation, @bonds.asset_allocation)
-    scenario_engine(@stock80_scenario, 10, 80, 10)
-    scenario_engine(@stock60_scenario, 10, 60, 30)
-
   end
 
   def user_params
@@ -168,7 +227,6 @@ class PagesController < ApplicationController
     @retirement_age = user_signed_in? ? @user.target_retirement_age : 65
     @value = 0
     @inflation = 1.5
-    @prop_current_value = 350000
 
     # stocks
     @stocks_average = 5 + @inflation
@@ -181,6 +239,7 @@ class PagesController < ApplicationController
     @bonds_sd = 0.5
     @bonds_90 = @bonds_average + 1.5 * @bonds_sd
     @bonds_10 = @bonds_average - 1.5 * @bonds_sd
+
   end
 
   def projection_arrays
@@ -286,7 +345,7 @@ class PagesController < ApplicationController
   end
 
   def loan_outstanding_by_year(loan_amount, interest_rate, loan_tenure, start_year)
-    @pmt = Exonio.pmt(interest_rate / 12, 12 * loan_tenure, loan_amount)
+    @pmt = Exonio.pmt((interest_rate *0.01) / 12, 12 * loan_tenure, loan_amount)
     @payment_month = 1
     @start_year = start_year
     @principal_paid_cumulative = 0
@@ -294,7 +353,7 @@ class PagesController < ApplicationController
     loan_tenure.times do
       @principal_paid_annual << [@year, 0]
       12.times do
-        @principal = @pmt - Exonio.ipmt(interest_rate / 12, @payment_month, 12 * loan_tenure, loan_amount)
+        @principal = @pmt - Exonio.ipmt((0.01 * interest_rate) / 12, @payment_month, 12 * loan_tenure, loan_amount)
         @principal_paid_annual.last[1] += @principal
         @payment_month += 1
       end
@@ -328,7 +387,6 @@ end
 def get_input_properties
   @input_properties = Property.where(user_id: current_user.id)
 end
-
 
   Leasehold_table = [
     [0,0],
