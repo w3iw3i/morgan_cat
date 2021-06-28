@@ -67,32 +67,36 @@ class PagesController < ApplicationController
       @readout = portfolio_readout
 
       # Property readout
-      @absolute_roi = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
-      @property_cagr = ((1+ @absolute_roi)**(1.to_f / @period) - 1) * 100
+      if !@property_data.empty?
+        @absolute_roi = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
+        @property_cagr = ((1+ @absolute_roi)**(1.to_f / @period) - 1) * 100
 
-      @net_property_value.each_with_index do |year_pair, index|
-        if @property_data[0][index][1] * 2 > year_pair[1]
-          @half_owned_year = year_pair[0]
-          break
+        @net_property_value.each_with_index do |year_pair, index|
+          if @property_data[0][index][1] * 2 > year_pair[1]
+            @half_owned_year = year_pair[0]
+            break
+          end
+        end
+
+        @property_max_value = []
+        primary_residence = Property.where(user_id: current_user.id).first
+        projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_max_value)
+        @property_max_value = lease_decay(@property_max_value, primary_residence.lease_remaining, @period)
+        @max_value = [[0,0]]
+        @property_max_value.each do |year_pair|
+          if year_pair[1] > @max_value.last[1]
+            @max_value << year_pair
+          end
+        end
+        @property_readout = property_readout
+        
+        # loan savings refinance
+        if check_loan_completion(@year)
+          @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
+          @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+          @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
         end
       end
-
-      @property_max_value = []
-      primary_residence = Property.where(user_id: current_user.id).first
-      projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_max_value)
-      @property_max_value = lease_decay(@property_max_value, primary_residence.lease_remaining, @period)
-      @max_value = [[0,0]]
-      @property_max_value.each do |year_pair|
-        if year_pair[1] > @max_value.last[1]
-          @max_value << year_pair
-        end
-      end
-      @property_readout = property_readout
-
-      # loan savings refinance
-      @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
-      @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
-      @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
     else
       # For new user / user who do not sign in
       # Create cash_projections
@@ -122,6 +126,10 @@ class PagesController < ApplicationController
     else
       return "high"
     end
+  end
+
+  def check_loan_completion(year)
+    @loan_outstanding_cumulative.last[0] >= year
   end
 
   def scenario_planning
@@ -376,27 +384,15 @@ class PagesController < ApplicationController
   end
 
 def get_input_assets
-  if user_signed_in?
-    @input_assets = Asset.where(user_id: current_user.id)
-  else
-    @input_assets = []
-  end
+  @input_assets = user_signed_in? ? Asset.where(user_id: current_user.id) : []
 end
 
 def get_input_expenses
-  if user_signed_in?
-    @input_expenses = Expense.where(user_id: current_user.id)
-  else
-    @input_expenses = []
-  end
+  @input_expenses = user_signed_in? ? Expense.where(user_id: current_user.id) : []
 end
 
 def get_input_properties
-  if user_signed_in?
-    @input_properties = Property.where(user_id: current_user.id)
-  else
-    @input_properties = []
-  end
+  @input_properties = user_signed_in? ? Property.where(user_id: current_user.id) : []
 end
 
   Leasehold_table = [
