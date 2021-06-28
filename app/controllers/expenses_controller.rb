@@ -2,6 +2,7 @@ class ExpensesController < ApplicationController
   def index
     @expenses = Expense.all
     @user = current_user
+    @expense = Expense.new
   end
 
   def new
@@ -14,22 +15,33 @@ class ExpensesController < ApplicationController
     inflation = 0.02
     @expense.inflated_amt =  @expense.amount*(1+inflation)**(years_to_compound)
     @expense.user = current_user
-    @expense.save
+    if @expense.save
+      redirect_to expenses_path
+    end
+  end
 
-    redirect_to user_expenses_path(current_user)
+  def edit
+    @expense = Expense.find(params[:id])
+  end
+
+  def update
+    @expense = Expense.find(params[:id])
+    @expense.update(expense_params)
+    if @expense.save
+      redirect_to expenses_path
+    end
   end
 
   def destroy
     @expense = Expense.find(params[:id])
     @expense.destroy
-
-    redirect_to user_expenses_path(current_user)
+    redirect_to expenses_path
   end
 
 private
 
   def expense_params
-    params.require("/users/#{current_user.id}/expenses").permit(:expense_type, :amount, :year_int)
+    params.require(:expense).permit(:expense_type, :amount, :year_int)
   end
 end
 

@@ -19,9 +19,7 @@ Rails.application.routes.draw do
   # patch '/update-properties/:id', to: 'properties#update'
   # delete '/delete-properties/:id', to: 'properties#destroy'
 
-  resources :users do
-    resources :expenses, only: [:index, :create, :destroy]
-  end
+  resources :expenses, only: [:index, :create, :edit, :update, :destroy]
 
 end
 
