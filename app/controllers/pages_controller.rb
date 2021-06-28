@@ -376,16 +376,27 @@ class PagesController < ApplicationController
   end
 
 def get_input_assets
-  @input_assets = Asset.where(user_id: current_user.id)
+  if user_signed_in?
+    @input_assets = Asset.where(user_id: current_user.id)
+  else
+    @input_assets = []
+  end
 end
 
-
 def get_input_expenses
-  @input_expenses = Expense.where(user_id: current_user.id)
+  if user_signed_in?
+    @input_expenses = Expense.where(user_id: current_user.id)
+  else
+    @input_expenses = []
+  end
 end
 
 def get_input_properties
-  @input_properties = Property.where(user_id: current_user.id)
+  if user_signed_in?
+    @input_properties = Property.where(user_id: current_user.id)
+  else
+    @input_properties = []
+  end
 end
 
   Leasehold_table = [
