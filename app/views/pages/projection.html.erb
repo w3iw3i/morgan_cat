@@ -180,8 +180,8 @@
               <ul class="list-group list-group-flush">
                <% @input_properties.each do |input_property| %>
                   <li class="list-group-item d-flex justify-content-between">
-                    <div><%= input_property.expense_type %></div>
-                    <div>$<%= number_with_delimiter(input_property.amount, :delimiter => ',') %></div>
+                    <div>HDB <%= input_property.flat_type %></div>
+                    <div>$<%= number_with_delimiter(input_property.property_value, :delimiter => ',') %></div>
                   </li>
                 <% end %>
               <% end %>
@@ -200,7 +200,7 @@
         <% if user_signed_in? %>
           <div class="add-buttons">
             <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Add Expenses", user_expenses_path(@user.id), class: 'btn btn-gradient' %></p>
+            <p><%= link_to "Add Expenses", expenses_path, class: 'btn btn-gradient' %></p>
             <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
           </div>
           <div class="">

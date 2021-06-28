@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="text-center my-3">
+    <h1>Edit Expense</h1>
+  </div>
+  <%= simple_form_for(@expense, url: "/expenses/#{@expense.id}",  html: {width: '100%', id: "asset-form"}) do |f| %>
+    <%= f.input :expense_type, label: 'Expense Type: ', :input_html => {:style=> 'width: 100%'}, :required => false, collection: ['Car', 'Wedding', 'House - Downpayment', 'House - Renovation', 'Child - Birth', 'Child - Education', 'Education', 'Business', 'Other'] %>
+    <%= f.input :year_int, label: 'Year: ', :input_html => {:style=> 'width: 100%'}, collection: 2021..2080, :required => false%>
+    <%= f.input :amount, label: 'Present-Day Expense ($): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
+    <div class="text-center my-3">
+        <%= button_to "Confirm",
+        expenses_path,
+        class: "btn btn-primary",
+        method: :post
+        %> 
+        <%= link_to "Cancel", expenses_path, class: 'btn btn-danger' %>
+    </div>
+
+  <% end %>
+</div>
