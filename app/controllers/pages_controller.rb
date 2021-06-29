@@ -5,6 +5,7 @@ class PagesController < ApplicationController
     @user = get_user_home
     @end_year = Date.today.year - 20
     @start_year = Date.today.year - 45
+    render layout: 'landing_page'
   end
 
   def projection
