@@ -93,7 +93,6 @@ class PagesController < ApplicationController
           if year_pair[1] > @max_value.last[1]
             @max_value << year_pair
           end
-
         end
         @property_readout = property_readout
 
@@ -102,14 +101,13 @@ class PagesController < ApplicationController
           @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
           @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
           @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
-
         end
-        @property_readout = property_readout
+        # @property_readout = property_readout
 
-        # loan savings refinance
-        @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
-        @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
-        @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
+        # # loan savings refinance
+        # @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
+        # @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+        # @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
       end
 
     else

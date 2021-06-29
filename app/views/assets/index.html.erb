@@ -104,39 +104,6 @@
   </div>
 </div>
 
-
-<!-- Add Cash Modal
-<div class="modal fade" id="addcashmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Cash</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="">
-          <%= simple_form_for(@asset, url: create_assets_path, html: {width: '100%', id: "asset-form"}) do |f| %>
-          <%= f.input :asset_type, label: 'Asset Type', :input_html => {:style=> 'width: 100%', value: 'Cash'}, :required => false, disabled:true %>
-          <%= f.input :amount, label: 'Amount (SGD)', :input_html => {:style=> 'width: 100%'}, :required => false%>
-          <%= f.input :growth_rate, label: 'Growth Rate (%): ', :input_html => {:style=> 'width: 100%'}, :required => false %>
-          <div class="mb-5">
-            <%= f.input :asset_allocation, label: 'Asset Allocation (%): ', :input_html => {:style=> 'width: 100%', value: @cash.first.asset_allocation}, disabled: true %>
-          </div>
-          <% end %>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="asset-form">Confirm</button>
-      </div>
-    </div>
-  </div>
-</div>
--->
-
 <br>
 
 <div class="landing-btn mt-5">
