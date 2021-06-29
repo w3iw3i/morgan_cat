@@ -3,30 +3,30 @@
   <%
     @year_space = 5
     data = [
-    {
-      name: "Cash",
-      data: @cash_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-    },
-    {
-      name: "Stocks",
-      data: @stocks_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-    },
-    {
-      name: "Bonds",
-      data: @bonds_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-    },
-    {
-      name: "CPF-Ordinary",
-      data: @cpfo_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-    },
-    {
-      name: "CPF-Special",
-      data: @cpfs_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-    },
-    {
-      name: "CPF-Medisave",
-      data: @cpfm_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-    }
+      {
+        name: "Cash",
+        data: @cash_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+      },
+      {
+        name: "Stocks",
+        data: @stocks_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+      },
+      {
+        name: "Bonds",
+        data: @bonds_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+      },
+      {
+        name: "CPF-Ordinary",
+        data: @cpfo_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+      },
+      {
+        name: "CPF-Special",
+        data: @cpfs_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+      },
+      {
+        name: "CPF-Medisave",
+        data: @cpfm_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+      }
     ]
 
     @property_data.each_with_index do |property,index|
@@ -226,22 +226,6 @@
              <li>Since WWII, we have averaged a market drop of at least 20% roughly every 8 years. These drops typically take 24 months on average to recover</li>
           <% end %>
         </ul>
-      <% if Property.exists?(user_id: @user.id) %>
-        <h4 id="sub-header">Home Equity Management</h4>
-          <ul>
-            <li>The equity on your home lease is projected to grow <strong><%= number_with_precision(@property_cagr, precision: 1) %>%</strong> annually until retirement. </li>
-            <% if @property_readout == "poor" %>
-              <li>This is slower than the CPF Ordinary rate of 2.5%. Consider using idle cash to pay off your mortgage instead of CPF funds</li>
-            <% elsif @property_readout == "average" %>
-              <li>This is faster than the CPF Ordinary rate of 2.5%. Consider using your CPF funds to service your mortgage</li>
-              <li>While the return is lower than the long-term average benchmark for global equity, it serves as a good diversifier of wealth</li>
-            <% else %>
-              <li>Your home equity is growing faster than the long-term average benchmark for global equity.</li>
-            <% end %>
-            <% if @loan_interest_annual > 1.2 %>
-              <li>Your loan interest is higher than the benchmark mortgage rate. You could refinance to save <strong><%= number_to_currency(@monthly_savings , unit: '$', separator: ",", precision: 0) %></strong> in interest monthly and <strong><%= number_to_currency(@total_savings, unit: '$', separator: ",", precision: 0) %></strong> over the remaining loan term </li>
-            <% end %>
-
 
       <h4 id="sub-header">Home Equity
         (<span id="detail"> <i class="fas fa-table"> </i> <%= link_to "Detail", property_path %> )</span> </h4>
@@ -264,11 +248,11 @@
               <% end %>
             <li>You will own 50% of your home lease by <%= @half_owned_year %> (<%= @half_owned_year.to_i - @start_ownership_year %> years after start of loan) and 100% by <%= @start_ownership_year + @loan_tenure_years - 1  %> </li>
             <li>The price of the home lease is projected to peak in <strong><%= @max_value.last[0] %></strong> across the remaining tenure of your lease</li>
-           <% end %>
+          <% end %>
         </ul>
 
-
   <% end %>
+
       <div class="">
         <% if user_signed_in? %>
           <div class="add-buttons">
@@ -285,10 +269,4 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
 
