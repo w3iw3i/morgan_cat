@@ -52,7 +52,7 @@ class AssetsController < ApplicationController
     end
 
     @cash = Asset.where(user_id: current_user.id, asset_type: "Cash")
-    @cash.update(asset_allocation: (80 - @other_asset_sum))
+    @cash.update(asset_allocation: (100 - @other_asset_sum))
   end
 
 end
