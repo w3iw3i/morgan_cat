@@ -17,66 +17,79 @@
   <!-- put a card design and iterate -->
   <div class="property-cards mt-5">
     <% @my_property.each do |property| %>
-     <div class="card">
-      <div class="card-body text-center">
-        <h5 class="card-title">HDB <%= property.flat_type %></h5>
-        <div>
-          <%= link_to edit_property_path(property.id) do %>
-            <i class="fas fa-pencil-alt"></i> Edit
-          <% end %> | 
-          <%= link_to "properties/#{property.id}", method: :delete, data: { confirm: "Are you sure?" } do %>
-            <i class="far fa-trash-alt"></i> Remove
-          <% end %>
+      <div class="card">
+        <% if property.flat_type === '1 Room' %>
+          <%= image_tag "hdb_1_rm.jpg", alt: "HDB 1 Room" %>
+        <% elsif property.flat_type === "2 Room" %>
+          <%= image_tag "hdb_2_rm.jpg", alt: "HDB 2 Room" %>
+        <% elsif property.flat_type === "3 Room" %>
+          <%= image_tag "hdb_3_rm.jpg", alt: "HDB 3 Room" %>
+        <% elsif property.flat_type === "4 Room" %>
+          <%= image_tag "hdb_4_rm.jpg", alt: "HDB 4 Room" %>
+        <% elsif property.flat_type === "5 Room" %>
+          <%= image_tag "hdb_5_rm.jpg", alt: "HDB 5 Room" %>
+        <% else %>
+          <%= image_tag "hdb_executive.jpg", alt: "HDB Executive" %>
+        <% end %>
+        <div class="card-body text-center">
+          <h5 class="card-title">HDB <%= property.flat_type %></h5>
+          <div>
+            <%= link_to edit_property_path(property.id) do %>
+              <i class="fas fa-pencil-alt"></i> Edit
+            <% end %> | 
+            <%= link_to "properties/#{property.id}", method: :delete, data: { confirm: "Are you sure?" } do %>
+              <i class="far fa-trash-alt"></i> Remove
+            <% end %>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <div><%= property.address %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Flat Type</div>
+              <div><%= property.flat_type %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Area</div>
+              <div><%= property.area %> sqm</div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Floor & Unit</div>
+              <div>#<%= property.floor %> - <%= property.unit %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Property Growth Rate</div>
+              <div><%= property.property_growth_rate %> %</div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Property Value</div>
+              <div>$<%= number_with_delimiter(property.property_value, :delimiter => ',') %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Lease Remaining</div>
+              <div><%= property.lease_remaining %> years</div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Starting Ownership Year</div>
+              <div><%= property.start_ownership_year %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Original Loan Amount</div>
+              <div>$<%= number_with_delimiter(property.original_loan_amount, :delimiter => ',') %></div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Annual Loan Interest</div>
+              <div><%= property.loan_interest_annual %> %</div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>Loan Tenure Years</div>
+              <div><%= property.loan_tenure_years %> years</div>
+            </li>
+          </ul>
+          <%# <%= link_to "Edit", edit_property_path(property.id), class: "btn btn-primary" %>
+          <%# <%= link_to "Remove", "properties/#{property.id}", class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %>
+          <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex justify-content-between">
-            <div><%= property.address %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Flat Type</div>
-            <div><%= property.flat_type %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Area</div>
-            <div><%= property.area %> sqm</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Floor & Unit</div>
-            <div>#<%= property.floor %> - <%= property.unit %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Property Growth Rate</div>
-            <div><%= property.property_growth_rate %> %</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Property Value</div>
-            <div>$<%= number_with_delimiter(property.property_value, :delimiter => ',') %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Lease Remaining</div>
-            <div><%= property.lease_remaining %> years</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Starting Ownership Year</div>
-            <div><%= property.start_ownership_year %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Original Loan Amount</div>
-            <div>$<%= number_with_delimiter(property.original_loan_amount, :delimiter => ',') %></div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Annual Loan Interest</div>
-            <div><%= property.loan_interest_annual %> %</div>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <div>Loan Tenure Years</div>
-            <div><%= property.loan_tenure_years %> years</div>
-          </li>
-        </ul>
-        <%# <%= link_to "Edit", edit_property_path(property.id), class: "btn btn-primary" %>
-        <%# <%= link_to "Remove", "properties/#{property.id}", class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %>
-        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-      </div>
     </div>
     <% end %>
   </div>
