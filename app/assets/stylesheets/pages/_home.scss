@@ -10,7 +10,40 @@
 
 .landing-title {
   text-align: center;
+  color: #000066;
 }
+
+#home-image {
+  border-radius: 8px;
+
+  box-shadow: 0px 0px 40px 20px rgba(0, 0, 0, 0.09);
+}
+
+#widget-text {
+  color: #5c5959;
+}
+h5 {
+  font-size: 44px;
+}
+
+h6 {
+  color: #b300b3;
+  font-size: 44px;
+}
+
+h4 {
+  font-size: 32px;
+}
+
+.boxed {
+margin-top: 32px;
+width: 100%;
+height: 700px;
+background-color:  #ffffff;
+}
+
+
+
 
 .landing-btn {
   text-align: center;
