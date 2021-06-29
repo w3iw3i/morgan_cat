@@ -1,4 +1,72 @@
-  <h2>Property </h2>
+<div class="text-center">
+  <h2>Home Equity</h2>
+</div>
+
+<p>There are two countervailing forces acting on 99-year leasehold HDB units in Singapore - <strong>property appreciation</strong> and <strong>lease decay</strong>.
+<ul>
+<li> We project property appreciation based UrbanZoom's analysis of price appreciation of Singapore property over the last 20 years.</li>
+<li> We project lease decay based the Leasehold Table used by the Singapore Land Authority to compare leasehold values to freehold values over the course of the lease.</li>
+</ul>
+Home loan amortization is then factored in to derive a home equity value</p>
+
+
+<div class="flex-container">
+
+  <div class="item1">
+  <h5 id="sub-header">Deriving Home Equity</h5>
+    <ul>
+      <li><strong>Property Appreciation:</strong> Projects value of freehold property at annualized gains of 2.2% (UrbanZoom analysis)</li>
+      <br>
+      <li><strong>Net Property Value:</strong> Subtracts lease decay from freehold property value to obtain value of leasehold property</li>
+      <br>
+      <li><strong>Home Equity:</strong> Subtracts outstanding loan balance from net property value</li>
+    </ul>
+
+  </div>
+
+  <div class="item2">
+    <%
+        data = [
+        {
+          name: "Property Appreciation",
+          data: @property_growth
+        },
+        {
+          name: "Net Property Value",
+          data: @property_growth_decay
+        },
+        {
+          name: "Home Equity",
+          data: @home_equity
+        }
+      ]
+      %>
+      <%=
+          line_chart data,
+          colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600"],
+          ytitle: "Value ($)", min:0, thousands: ",", loading: "Loading...",
+          library: {
+            yAxis: {
+                labels: {
+                    format: '${value}'
+                }
+            },
+                tooltip: {
+                  pointFormat: 'Total Spent: <b>{point.y}</b>',
+                  xDateFormat: '%B',
+                  valuePrefix: '$'
+                }
+              }
+      %>
+  </div>
+</div>
+
+
+<h5 id="sub-header" style="margin-top: 30px">Home Equity Table</h5>
+<p>We show the projected year-on-year values for property appreciation (Column A), lease decay (Column B), net property value (Column C), loan outstanding (Column D)
+and home equity (Column E). Home equity is projected to peak at <strong><%= number_to_currency(@max_value.last[1], unit: '$', separator: ",", precision: 0) %></strong> in <strong><%= @max_value.last[0] %></strong>.
+You will own your home free-and-clear by <strong><%=@mortgage_end[0].to_i - 1 %></strong>. </p>
+
 
    <table id="expense-table">
     <col style="width:10%">

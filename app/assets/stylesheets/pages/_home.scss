@@ -153,6 +153,19 @@ a:visited {
   color: white;
 }
 
+
+.flex-container {
+  display:flex
+}
+
+.item1 {
+  width: 25%;
+}
+
+.item2 {
+  width: 75%;
+}
+
 .projection-chart {
   margin-left: auto;
 }
@@ -164,3 +177,4 @@ a:visited {
 .card-img {
   margin: auto;
 }
+
