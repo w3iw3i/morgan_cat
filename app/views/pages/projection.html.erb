@@ -1,79 +1,100 @@
-<h3 id="sub-header">Net Worth Projection</h3>
-<% if user_signed_in? %>
-  <%
-    @year_space = 5
-    data = [
-      {
-        name: "Cash",
-        data: @cash_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-      },
-      {
-        name: "Stocks",
-        data: @stocks_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-      },
-      {
-        name: "Bonds",
-        data: @bonds_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
-      },
-      {
-        name: "CPF-Ordinary",
-        data: @cpfo_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-      },
-      {
-        name: "CPF-Special",
-        data: @cpfs_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-      },
-      {
-        name: "CPF-Medisave",
-        data: @cpfm_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
-      }
-    ]
+<div class="container">
+  <div class="row">
+    <div class="refine-projection col-4">
+      <h3 id="sub-header">Refine Projection</h3>
+      <% if user_signed_in? %>
+        <div class="add-buttons justify-content-center mt-5">
+          <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
+          <p><%= link_to "Add Expenses", expenses_path, class: 'btn btn-gradient' %></p>
+          <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
+        </div>
+      <% else %>
+        <div class="landing-btn justify-content-center mt-5">
+          <%= link_to "Sign up to customise", new_user_registration_path(dob: @user.dob, monthly_income: @user.monthly_income, monthly_expenses: @user.monthly_expenses), class: 'btn btn-gradient' %>
+        </div>
+      <% end %>
+    </div>
 
-    @property_data.each_with_index do |property,index|
-      new_property = {
-                      name: "Property #{index + 1}",
-                      data: property.select.with_index{|_,i| (i+1) % @year_space == 0}
-                      }
-      data << new_property
-    end
-  %>
+    <div class="projection-chart col-8">
+      <h3 id="sub-header">Net Worth Projection</h3>
+      <% if user_signed_in? %>
+        <%
+          @year_space = 5
+          data = [
+            {
+              name: "Cash",
+              data: @cash_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+            },
+            {
+              name: "Stocks",
+              data: @stocks_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+            },
+            {
+              name: "Bonds",
+              data: @bonds_projection_view.select.with_index{|_,i| (i+1) % @year_space == 0}
+            },
+            {
+              name: "CPF-Ordinary",
+              data: @cpfo_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+            },
+            {
+              name: "CPF-Special",
+              data: @cpfs_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+            },
+            {
+              name: "CPF-Medisave",
+              data: @cpfm_projection.select.with_index{|_,i| (i+1) % @year_space == 0}
+            }
+          ]
 
-  <%=
-      column_chart data,
-      colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600", "#778899", "#003f5c"],
-      stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
-      library: {
-        yAxis: {
-            labels: {
-                format: '${value}'
-            }
-        },
-            tooltip: {
-              pointFormat: 'Total Spent: <b>{point.y}</b>',
-              xDateFormat: '%B',
-              valuePrefix: '$'
-            }
-          }
-  %>
+          @property_data.each_with_index do |property,index|
+            new_property = {
+                            name: "Property #{index + 1}",
+                            data: property.select.with_index{|_,i| (i+1) % @year_space == 0}
+                            }
+            data << new_property
+          end
+        %>
 
-<% else %>
-  <%= column_chart @projected_amt,
-      colors: ["#003f5c"],
-      stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
-      library: {
-        yAxis: {
-            labels: {
-                format: '${value}'
-            }
-        },
-            tooltip: {
-              pointFormat: 'Total Spent: <b>{point.y}</b>',
-              xDateFormat: '%B',
-              valuePrefix: '$'
-            }
-          }
-  %>
-<% end %>
+        <%=
+            column_chart data,
+            colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600", "#778899", "#003f5c"],
+            stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
+            library: {
+              yAxis: {
+                  labels: {
+                      format: '${value}'
+                  }
+              },
+                  tooltip: {
+                    pointFormat: 'Total Spent: <b>{point.y}</b>',
+                    xDateFormat: '%B',
+                    valuePrefix: '$'
+                  }
+                }
+        %>
+
+      <% else %>
+        <%= column_chart @projected_amt,
+            colors: ["#003f5c"],
+            stacked:true, ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
+            library: {
+              yAxis: {
+                  labels: {
+                      format: '${value}'
+                  }
+              },
+                  tooltip: {
+                    pointFormat: 'Total Spent: <b>{point.y}</b>',
+                    xDateFormat: '%B',
+                    valuePrefix: '$'
+                  }
+                }
+        %>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <div class="container mt-3">
   <div class="row">
@@ -252,21 +273,6 @@
         </ul>
 
   <% end %>
-
-      <div class="">
-        <% if user_signed_in? %>
-          <div class="add-buttons">
-            <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Add Expenses", expenses_path, class: 'btn btn-gradient' %></p>
-            <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
-          </div>
-
-        <% else %>
-          <div class="landing-btn">
-            <%= link_to "Sign up to customise", new_user_registration_path(dob: @user.dob, monthly_income: @user.monthly_income, monthly_expenses: @user.monthly_expenses), class: 'btn btn-gradient' %>
-           </div>
-        <% end %>
-    </div>
   </div>
 </div>
 

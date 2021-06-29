@@ -93,7 +93,7 @@ body {
 
 .add-buttons {
   display: grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
   grid-gap: 16px;
 }
 
@@ -151,4 +151,12 @@ a:visited {
 
 #detail a:visited {
   color: white;
+}
+
+.projection-chart {
+  margin-left: auto;
+}
+
+.refine-projection {
+  margin-right: auto;
 }
