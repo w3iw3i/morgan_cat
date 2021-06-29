@@ -96,7 +96,7 @@ class PagesController < ApplicationController
 
         end
         @property_readout = property_readout
-        
+
         # loan savings refinance
         if check_loan_completion(@year)
           @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
@@ -153,6 +153,11 @@ class PagesController < ApplicationController
       projection_arrays
       projection_calcs
       scenarios
+
+      @discretionary_allocation = @stocks.asset_allocation + @bonds.asset_allocation + @cash.asset_allocation
+      @stocks.asset_allocation = (100 * @stocks.asset_allocation / @discretionary_allocation)
+      @bonds.asset_allocation = (100 * @bonds.asset_allocation / @discretionary_allocation)
+      @cash.asset_allocation = (100 * @cash.asset_allocation / @discretionary_allocation)
     end
   end
 
@@ -175,6 +180,21 @@ class PagesController < ApplicationController
 
     @loan_outstanding_cumulative = loan_outstanding_by_year(@loan_amount, @loan_interest_annual, @loan_tenure_years, @start_ownership_year)
     @home_equity =  home_equity(@property_projection, @loan_outstanding_cumulative)
+
+    @max_value = [[0,0]]
+    @home_equity.each do |year_pair|
+      if year_pair[1] > @max_value.last[1]
+        @max_value << year_pair
+      end
+    end
+
+    @home_equity.each_with_index do |year_pair, index|
+      if year_pair[1] == @property_growth_decay[index][1]
+        @mortgage_end = year_pair
+        break
+      end
+    end
+
   end
 
   private
@@ -190,12 +210,12 @@ class PagesController < ApplicationController
     @baseline_scenario = []
     @stock80_scenario = []
     @stock60_scenario = []
+    @cpf_adjustment_factor = 0.8
 
     # User Baseline Scenario
     scenario_engine(@baseline_scenario, @cash.asset_allocation, @stocks.asset_allocation, @bonds.asset_allocation)
-    scenario_engine(@stock80_scenario, 10, 80, 10)
-    scenario_engine(@stock60_scenario, 10, 60, 30)
-
+    scenario_engine(@stock80_scenario, 20 * @cpf_adjustment_factor, 60 * @cpf_adjustment_factor, 20 * @cpf_adjustment_factor)
+    scenario_engine(@stock60_scenario, 20 * @cpf_adjustment_factor, 40 * @cpf_adjustment_factor, 40 * @cpf_adjustment_factor)
   end
 
   def scenario_engine(scenario_array, cash_allocation, stocks_allocation, bonds_allocation)
@@ -234,7 +254,6 @@ class PagesController < ApplicationController
         end
       end
       asset_array.append([year.to_s, value])
-      #if ((year) % 5 == 0 || year == Date.today.year)
       year += 1
     end
     value
@@ -409,7 +428,7 @@ def get_input_properties
   @input_properties = user_signed_in? ? Property.where(user_id: current_user.id) : []
 end
 
-  Leasehold_table = [
+Leasehold_table = [
     [0,0],
     [1,3.8],
     [2, 7.5],
@@ -511,5 +530,6 @@ end
     [98, 95.9],
     [99, 96.0]
   ]
+
 end
 
