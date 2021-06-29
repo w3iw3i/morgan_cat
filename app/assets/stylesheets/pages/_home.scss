@@ -93,7 +93,7 @@ body {
 
 .add-buttons {
   display: grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
   grid-gap: 16px;
 }
 
@@ -153,6 +153,7 @@ a:visited {
   color: white;
 }
 
+
 .flex-container {
   display:flex
 }
@@ -164,3 +165,16 @@ a:visited {
 .item2 {
   width: 75%;
 }
+
+.projection-chart {
+  margin-left: auto;
+}
+
+.refine-projection {
+  margin-right: auto;
+}
+
+.card-img {
+  margin: auto;
+}
+

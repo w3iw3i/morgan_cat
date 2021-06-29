@@ -9,6 +9,7 @@ class PropertiesController < ApplicationController
     @my_property = Property.where(user: current_user)
     @end_year = Date.today.year
     @start_year = Date.today.year - 50
+    get_property_img
   end
 
   def create
@@ -57,5 +58,21 @@ class PropertiesController < ApplicationController
     @property.property_value = webscraper.get_property_value
     @property.lease_remaining = webscraper.get_lease_remaining
     @property.address = webscraper.get_display_address
+  end
+
+  def get_property_img
+    if @property.flat_type === '1 Room'
+      @img = "hdb_1_rm.jpg"
+    elsif @property.flat_type === "2 Room"
+      @img = "hdb_2_rm.jpg"
+    elsif @property.flat_type === "3 Room"
+      @img = "hdb_3_rm.jpg"
+    elsif @property.flat_type === "4 Room"
+      @img = "hdb_4_rm.jpg"
+    elsif @property.flat_type === "5 Room"
+      @img = "hdb_5_rm.jpg"
+    else
+      @img = "hdb_executive.jpg"
+    end
   end
 end
