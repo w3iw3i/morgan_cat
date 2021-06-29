@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
-    <div class="refine-projection col-4">
-      <h3 id="sub-header">Refine Projection</h3>
+    <div class="refine-projection col-3">
+      <h4 id="sub-header">Refine Projection</h4>
       <% if user_signed_in? %>
         <div class="add-buttons justify-content-center mt-5">
           <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
@@ -15,8 +15,8 @@
       <% end %>
     </div>
 
-    <div class="projection-chart col-8">
-      <h3 id="sub-header">Net Worth Projection</h3>
+    <div class="projection-chart col-9">
+      <h4 id="sub-header">Net Worth Projection</h4>
       <% if user_signed_in? %>
         <%
           @year_space = 5
