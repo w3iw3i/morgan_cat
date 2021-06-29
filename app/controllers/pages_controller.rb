@@ -67,7 +67,13 @@ class PagesController < ApplicationController
       @readout = portfolio_readout
 
       # Property readout
-      if !@property_data.empty?
+
+      if @property_data[0] == nil
+        @property_readout = "no-property"
+      else
+
+      #if !@property_data.empty?
+
         @absolute_roi = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
         @property_cagr = ((1+ @absolute_roi)**(1.to_f / @period) - 1) * 100
 
@@ -87,6 +93,7 @@ class PagesController < ApplicationController
           if year_pair[1] > @max_value.last[1]
             @max_value << year_pair
           end
+
         end
         @property_readout = property_readout
         
@@ -95,15 +102,22 @@ class PagesController < ApplicationController
           @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
           @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
           @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
+
         end
+        @property_readout = property_readout
+
+        # loan savings refinance
+        @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
+        @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+        @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
       end
+
     else
       # For new user / user who do not sign in
       # Create cash_projections
       @cash_allocation = 100
       projection_machine(@period, @year, (@rate-@inflation), @value, @cash_allocation * 0.01 * @monthly_savings, @projected_amt)
     end
-
   end
 
   def portfolio_readout
