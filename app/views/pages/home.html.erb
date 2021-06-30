@@ -1,39 +1,77 @@
 <!-- <div class="landing-title mt-5">
   <h1><strong>Morgan the Banker Cat</strong></h1>
 </div> -->
-
-<div class="row mt-5">
-  <div class="col-6">
-    <%= image_tag 'couple.png', width: "100%" %>
-  </div>
-  <div class="col-6">
-    <div class="landing-title">
-      <h2>Take the first step to build your <strong>FREE</strong> financial plan</h2>
+<div class="container mb-5">
+  <div class="row mt-5 home-first">
+    <div class="col-7">
+      <div class="landing-title">
+        <h5><strong>Take the first step to build your <h6>free financial plan.</h6></strong></h2>
+      </div>
+      <%= simple_form_for(@user, method: :get, url: projection_path, wrapper: :horizontal_form) do |f| %>
+        <%= f.error_notification %>
+        <div class="container mt-5 ml-5">
+          <%= f.input :dob,
+                      label: 'Birth Year',
+                      prompt: "Select your birth year",
+                      input_html: { class: "landing-form" },
+                      collection: @start_year..@end_year,
+                      selected: @user.dob.nil? ? nil : @user.dob.year
+          %>
+          <%= f.input :monthly_income,
+                      label: 'Monthly Income',
+                      placeholder: "How much do you earn per month?",
+                      input_html: { class: "landing-form" }
+          %>
+          <%= f.input :monthly_expenses,
+                      label: 'Monthly Expenses',
+                      placeholder: "How much do you spend per month?",
+                      input_html: { class: "landing-form" }
+          %>
+        </div>
+        <div class="mt-5 landing-btn">
+          <%= f.submit 'View Projection', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
     </div>
-    <%= simple_form_for(@user, method: :get, url: projection_path, wrapper: :horizontal_form) do |f| %>
-      <%= f.error_notification %>
-      <div class="container mt-5 ml-5">
-        <%= f.input :dob, 
-                    label: 'Birth Year',
-                    prompt: "Select your birth year",
-                    input_html: { class: "landing-form" },
-                    collection: @start_year..@end_year,
-                    selected: @user.dob.nil? ? nil : @user.dob.year 
-        %>
-        <%= f.input :monthly_income, 
-                    label: 'Monthly Income', 
-                    placeholder: "How much do you earn per month?",
-                    input_html: { class: "landing-form" }
-        %>
-        <%= f.input :monthly_expenses, 
-                    label: 'Monthly Expenses', 
-                    placeholder: "How much do you spend per month?",
-                    input_html: { class: "landing-form" }
-        %>
+    <div class="col-5">
+      <%= image_tag 'couple.png', id: "home-image", class: 'w-100'  %>
+    </div>
+  </div>
+
+</div>
+<div class="boxed pt-5">
+  <div class="text-center landing-title mb-5">
+        <h5><strong>You need a financial plan. </strong></h5>
+        <body>Financial planning has been proven to improve financial well-being. Here’s why you need a financial plan: </body>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card align-items-center pt-5">
+          <%= image_tag 'making-money.png', width: 160  %>
+          <div class="card-body text-center", id= "widget-text">
+            <h4 class="card-title">Save more</h4>
+            <p class="card-text">Households with financial plans are 2.5x more likely to save enough for retirement.</p>
+          </div>
+        </div>
       </div>
-      <div class="mt-5 landing-btn">
-        <%= f.submit 'View Projection', class: 'btn btn-primary' %>
+      <div class="col">
+        <div class="card align-items-center pt-5">
+          <%= image_tag 'achieving-goals.png', width: 160  %>
+          <div class="card-body text-center", id= "widget-text">
+            <h4 class="card-title">Reach goals</h4>
+            <p class="card-text">Households with financial plans set and reach meaningful goals.</p>
+          </div>
+        </div>
       </div>
-    <% end %>
+      <div class="col">
+        <div class="card align-items-center pt-5">
+          <%= image_tag 'growth.png', width: 160  %>
+          <div class="card-body text-center", id= "widget-text">
+            <h4 class="card-title">Increase productivity</h4>
+            <p class="card-text">Individuals with financial plans are more productive while at work.</p>
+          </div>
+      </div>
+    </div>
   </div>
 </div>
