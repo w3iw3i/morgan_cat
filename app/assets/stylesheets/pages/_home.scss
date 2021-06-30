@@ -76,8 +76,6 @@ background-color:  #ffffff;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
-
-
 .btn-gradient {
   color: #955196;
   // padding: 8px 24px;
@@ -127,7 +125,7 @@ body {
 .add-buttons {
   display: grid;
   grid-template-rows:1fr 1fr 1fr;
-  grid-gap: 16px;
+  grid-gap: -11px;
 }
 
 .other-buttons{

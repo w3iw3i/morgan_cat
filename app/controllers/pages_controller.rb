@@ -75,8 +75,11 @@ class PagesController < ApplicationController
 
       #if !@property_data.empty?
 
-        @absolute_roi = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
-        @property_cagr = ((1+ @absolute_roi)**(1.to_f / @period) - 1) * 100
+        @rate_of_increase = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
+        @property_cagr = ((1+ @rate_of_increase)**(1.to_f / @period) - 1) * 100
+
+        @property_roi = ((@property_data[0][@period-1][1] - @loan_outstanding_cumulative[0][1])/@loan_outstanding_cumulative[0][1])*100
+        @property_roi_annual = @property_roi / @period
 
         @net_property_value.each_with_index do |year_pair, index|
           if @property_data[0][index][1] * 2 > year_pair[1]
@@ -86,9 +89,9 @@ class PagesController < ApplicationController
         end
 
         @property_max_value = []
-        primary_residence = Property.where(user_id: current_user.id).first
-        projection_machine(primary_residence.lease_remaining, @year, (primary_residence.property_growth_rate-@inflation),primary_residence.property_value, 0, @property_max_value)
-        @property_max_value = lease_decay(@property_max_value, primary_residence.lease_remaining, @period)
+        @primary_residence = Property.where(user_id: current_user.id).first
+        projection_machine(@primary_residence.lease_remaining, @year, (@primary_residence.property_growth_rate-@inflation),@primary_residence.property_value, 0, @property_max_value)
+        @property_max_value = lease_decay(@property_max_value, @primary_residence.lease_remaining, @period)
         @max_value = [[0,0]]
         @property_max_value.each do |year_pair|
           if year_pair[1] > @max_value.last[1]
@@ -100,7 +103,7 @@ class PagesController < ApplicationController
         # loan savings refinance
         if check_loan_completion(@year)
           @loan_left = @loan_outstanding_cumulative.select {|out| out[0] == @year }
-          @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.2) * 0.01 / 12
+          @monthly_savings = @loan_left[0][1] * (@loan_interest_annual - 1.5) * 0.01 / 12
           @total_savings = @monthly_savings * 12 * (@loan_tenure_years - (@year - @start_ownership_year))
         end
         # @property_readout = property_readout
@@ -132,9 +135,9 @@ class PagesController < ApplicationController
   end
 
   def property_readout
-    if @property_cagr <= 2.5
+    if (@property_roi_annual + 1.5) <= 2.5
       return "poor"
-    elsif @property_cagr > 2.5 && @property_cagr < 7
+    elsif (@property_roi_annual + 1.5) > 2.5 && (@property_roi_annual + 1.5) < 7
       return "average"
     else
       return "high"

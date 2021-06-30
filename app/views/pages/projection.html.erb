@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
-    <div class="refine-projection col-4">
-      <h3 id="sub-header">Refine Projection</h3>
+    <div class="refine-projection col-3">
+      <h4 id="sub-header">Refine</h4>
       <% if user_signed_in? %>
         <div class="add-buttons justify-content-center mt-5">
           <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
@@ -15,8 +15,8 @@
       <% end %>
     </div>
 
-    <div class="projection-chart col-8">
-      <h3 id="sub-header">Net Worth Projection</h3>
+    <div class="projection-chart col-9">
+      <h4 id="sub-header">Net Worth Projection</h4>
       <% if user_signed_in? %>
         <%
           @year_space = 5
@@ -49,7 +49,7 @@
 
           @property_data.each_with_index do |property,index|
             new_property = {
-                            name: "Property #{index + 1}",
+                            name: "HDB #{@primary_residence.flat_type}",
                             data: property.select.with_index{|_,i| (i+1) % @year_space == 0}
                             }
             data << new_property
@@ -249,13 +249,15 @@
         </ul>
 
       <h4 id="sub-header">Home Equity
-        (<span id="detail"> <i class="fas fa-table"> </i> <%= link_to "Detail", property_path %> )</span> </h4>
+        (<span id="detail"> <i class="fas fa-chart-line"> </i> <%= link_to "Detail", property_path %> )</span> </h4>
       </h4>
         <ul>
           <% if @property_readout == "no-property" %>
             <li> Add a property to receive recommendations </li>
           <% else %>
-            <li>The equity on your home lease is projected to grow <strong><%= number_with_precision(@property_cagr, precision: 1) %>%</strong> annually until retirement. </li>
+            <li>The equity on your home lease is projected to increase <strong><%= number_with_precision(@property_cagr, precision: 1) %>%</strong> annually adjusting for inflation until retirement. </li>
+            <li>The total return on investment is projected to be <strong><%= number_with_precision(@property_roi, precision: 1) %>%</strong>, working out to
+            <strong><%= number_with_precision(@property_roi_annual, precision: 1) %>% annually (<%= number_with_precision(@property_roi_annual + 1.5, precision: 1) %>% in nominal terms)</li>
               <% if @property_readout == "poor" %>
                 <li>This is slower than the CPF Ordinary rate of 2.5%. Consider using idle cash to pay off your mortgage instead of CPF funds</li>
               <% elsif @property_readout == "average" %>
