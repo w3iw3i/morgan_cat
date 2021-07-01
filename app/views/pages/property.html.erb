@@ -4,16 +4,19 @@
 
 <p>There are two countervailing forces acting on 99-year leasehold HDB units in Singapore - <strong>property appreciation</strong> and <strong>lease decay</strong>.
 <ul>
-<li> We project property appreciation based UrbanZoom's analysis of price appreciation of Singapore property over the last 20 years.</li>
-<li> We project lease decay based the Leasehold Table used by the Singapore Land Authority to compare leasehold values to freehold values over the course of the lease.</li>
+  <li> We project property appreciation based on UrbanZoom's analysis of price appreciation of Singapore property over the last 20 years.</li>
+  <li> We project lease decay based on the Leasehold Table used by the Singapore Land Authority to compare leasehold values to freehold values over the course of the lease.</li>
 </ul>
 Home loan amortization is then factored in to derive a home equity value</p>
 
+<br>
+
+<div class="text-center">
+  <h3 id="sub-header">Deriving Home Equity</h3>
+</div>
 
 <div class="flex-container">
-
   <div class="item1">
-  <h5 id="sub-header">Deriving Home Equity</h5>
     <ul>
       <li><strong>Property Appreciation:</strong> Projects value of freehold property at annualized gains of 2.2% (UrbanZoom analysis)</li>
       <br>
@@ -21,7 +24,6 @@ Home loan amortization is then factored in to derive a home equity value</p>
       <br>
       <li><strong>Home Equity:</strong> Subtracts outstanding loan balance from net property value</li>
     </ul>
-
   </div>
 
   <div class="item2">
@@ -61,8 +63,9 @@ Home loan amortization is then factored in to derive a home equity value</p>
   </div>
 </div>
 
+<br>
 
-<h5 id="sub-header" style="margin-top: 30px">Home Equity Table</h5>
+<h3 id="sub-header" style="margin-top: 30px">Home Equity Table</h3>
 <p>We show the projected year-on-year values for property appreciation (Column A), lease decay (Column B), net property value (Column C), loan outstanding (Column D)
 and home equity (Column E). Home equity is projected to peak at <strong><%= number_to_currency(@max_value.last[1], unit: '$', separator: ",", precision: 0) %></strong> in <strong><%= @max_value.last[0] %></strong>.
 You will own your home free-and-clear by <strong><%=@mortgage_end[0].to_i - 1 %></strong>. </p>

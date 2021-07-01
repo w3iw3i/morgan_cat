@@ -1,4 +1,6 @@
-<h2>Log in</h2>
+<div class="text-center mt-5">
+  <h2>User Log in</h2>
+</div>
 
 <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="form-inputs">
@@ -13,7 +15,7 @@
   </div>
 
   <div class="form-actions landing-btn">
-    <%= f.button :submit, "Login", class: 'btn btn-gradient' %>
+    <%= f.button :submit, "Login", class: 'btn btn-primary' %>
   </div>
 <% end %>
 

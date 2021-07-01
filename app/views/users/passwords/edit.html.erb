@@ -1,4 +1,6 @@
-<h2>Change your password</h2>
+<div class="text-center mt-5">
+  <h2>Change your password</h2>
+</div>
 
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
   <%= f.error_notification %>
@@ -19,9 +21,11 @@
                 input_html: { autocomplete: "new-password" } %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Change my password" %>
+  <div class="form-actions landing-btn">
+    <%= f.button :submit, "Change my password", class: 'btn btn-primary' %>
   </div>
 <% end %>
 
+<!--
 <%= render "users/shared/links" %>
+-->
