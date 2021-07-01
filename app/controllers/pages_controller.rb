@@ -398,7 +398,7 @@ class PagesController < ApplicationController
         @payment_month += 1
       end
       @principal_paid_cumulative += @principal_paid_annual.last[1]
-      @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative]
+      @loan_outstanding_cumulative << [@start_year, loan_amount + @principal_paid_cumulative.round]
       @start_year += 1
     end
     @loan_outstanding_cumulative
