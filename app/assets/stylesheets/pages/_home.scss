@@ -107,12 +107,13 @@ background-color:  #ffffff;
 }
 
 #sub-header {
-  background-color: #955196;
+  background-color: #000066;
   color: white;
   padding: 5px 15px;
   margin-top: 10px;
   text-align: center;
   margin-bottom: 15px;
+  border-radius: 4px;
 }
 
 .home-btn {
@@ -122,7 +123,7 @@ background-color:  #ffffff;
 }
 
 body {
- color: #955196 !important;
+ color: #343d52 !important;
 }
 
 .add-buttons {
@@ -190,8 +191,16 @@ a:visited {
   color: purple;
 }
 
-#detail a:visited {
-  color: white;
+#detail {
+  padding-top: 4px;
+  padding-bottom: 16px;
+  border: none;
+  background: none;
+}
+
+#detail:hover {
+  color: #000066;
+  text-decoration:underline;
 }
 
 
