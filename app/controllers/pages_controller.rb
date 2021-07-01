@@ -278,7 +278,7 @@ class PagesController < ApplicationController
   end
 
   def projection_constants
-    @rate = 1.5
+    @rate = 0
     @retirement_age = user_signed_in? ? @user.target_retirement_age : 65
     @value = 0
     @inflation = 1.5
