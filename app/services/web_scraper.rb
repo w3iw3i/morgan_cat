@@ -23,6 +23,7 @@ class WebScraper
     url = "https://www.urbanzoom.com/house-preview?flatType=#{@flattype}&floorNum=#{@floornum}&unitNum=#{@unitnum}&areaInSqm=#{@areasqm}&ref=home-search&housingType=public&postalCode=#{@postalcode}"
     doc = Nokogiri::XML(open(url).read, nil, "utf-8")
     @year_completed = doc.at_css(".project_details__list").children.children.children[-2].text.to_i
+    # @year_completed = Date.current.year if @year_completed.to_s.length != 4
     lease_computation
   end
 

@@ -73,8 +73,6 @@ class PagesController < ApplicationController
         @property_readout = "no-property"
       else
 
-      #if !@property_data.empty?
-
         @rate_of_increase = (@property_data[0][@period-1][1] - @property_data[0][0][1]) / @property_data[0][0][1]
         @property_cagr = ((1+ @rate_of_increase)**(1.to_f / @period) - 1) * 100
 
@@ -155,14 +153,10 @@ class PagesController < ApplicationController
       projection_arrays
       projection_calcs
       scenarios
-      # @discretionary_allocation = @stocks.asset_allocation + @bonds.asset_allocation + @cash.asset_allocation
-      # if @discretionary_allocation.zero?
-      #   @cash.asset_allocation = 100
-      # else
-      #   @stocks.asset_allocation = (100 * @stocks.asset_allocation / @discretionary_allocation)
-      #   @bonds.asset_allocation = (100 * @bonds.asset_allocation / @discretionary_allocation)
-      #   @cash.asset_allocation = (100 * @cash.asset_allocation / @discretionary_allocation)
-      # end
+      @discretionary_allocation = @stocks.asset_allocation + @bonds.asset_allocation + @cash.asset_allocation
+      @stocks.asset_allocation = (100 * @stocks.asset_allocation / @discretionary_allocation)
+      @bonds.asset_allocation = (100 * @bonds.asset_allocation / @discretionary_allocation)
+      @cash.asset_allocation = (100 * @cash.asset_allocation / @discretionary_allocation)
     end
   end
 
@@ -216,15 +210,6 @@ class PagesController < ApplicationController
     @stock80_scenario = []
     @stock60_scenario = []
     @cpf_adjustment_factor = 0.8
-
-    @discretionary_allocation = @stocks.asset_allocation + @bonds.asset_allocation + @cash.asset_allocation
-    if @discretionary_allocation.zero?
-      @cash.asset_allocation = 100
-    else
-      @stocks.asset_allocation = (100 * @stocks.asset_allocation / @discretionary_allocation)
-      @bonds.asset_allocation = (100 * @bonds.asset_allocation / @discretionary_allocation)
-      @cash.asset_allocation = (100 * @cash.asset_allocation / @discretionary_allocation)
-    end
 
     # User Baseline Scenario
     scenario_engine(@baseline_scenario, @cash.asset_allocation, @stocks.asset_allocation, @bonds.asset_allocation)
@@ -393,7 +378,7 @@ class PagesController < ApplicationController
     @base_percentile = Leasehold_table[@counter][1]
 
     property_projection.each do |element|
-      element[1] = element[1] * (Leasehold_table[@counter-1][1] / @base_percentile)
+      element[1] = (element[1] * (Leasehold_table[@counter-1][1] / @base_percentile)).round
       @counter -= 1
     end
     property_projection
