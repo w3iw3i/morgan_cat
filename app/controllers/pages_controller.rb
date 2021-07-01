@@ -157,6 +157,7 @@ class PagesController < ApplicationController
       scenarios
 
       @discretionary_allocation = @stocks.asset_allocation + @bonds.asset_allocation + @cash.asset_allocation
+      @discretionary_allocation = 1 if @discretionary_allocation.zero?
       @stocks.asset_allocation = (100 * @stocks.asset_allocation / @discretionary_allocation)
       @bonds.asset_allocation = (100 * @bonds.asset_allocation / @discretionary_allocation)
       @cash.asset_allocation = (100 * @cash.asset_allocation / @discretionary_allocation)
