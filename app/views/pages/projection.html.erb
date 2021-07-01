@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="refine-projection col-3">
-      <h4 id="sub-header">Refine</h4>
+      <h3 id="sub-header">Refine</h3>
       <% if user_signed_in? %>
         <div class="add-buttons justify-content-center mt-5">
           <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="projection-chart col-9">
-      <h4 id="sub-header">Net Worth Projection</h4>
+      <h3 id="sub-header">Net Worth Projection</h3>
       <% if user_signed_in? %>
         <%
           @year_space = 5
@@ -225,8 +225,8 @@
 
   <% if user_signed_in? %>
     <div class="col-md">
-      <h4 id="sub-header">Portfolio
-      (<span id="detail"> <i class="fas fa-chart-line"></i> <%= link_to "Detail", scenario_planning_path %> )</span> </h4>
+      <h3 id="sub-header">Portfolio
+      </h3>
         <ul>
           <li>Your portfolio is <strong> <%= @readout %></strong>  </li>
           <% if @readout == "conservative" %>
@@ -247,10 +247,11 @@
              <li>Since WWII, we have averaged a market drop of at least 20% roughly every 8 years. These drops typically take 24 months on average to recover</li>
           <% end %>
         </ul>
+        <div id="detail", class="text-center"> <%= link_to "View Detail", scenario_planning_path,  class: "btn btn-gradient", id: "detail" %></div>
 
-      <h4 id="sub-header">Home Equity
-        (<span id="detail"> <i class="fas fa-chart-line"> </i> <%= link_to "Detail", property_path %> )</span> </h4>
-      </h4>
+
+      <h3 id="sub-header">Home Equity
+      </h3>
         <ul>
           <% if @property_readout == "no-property" %>
             <li> Add a property to receive recommendations </li>
@@ -273,7 +274,7 @@
             <li>The price of the home lease is projected to peak in <strong><%= @max_value.last[0] %></strong> across the remaining tenure of your lease</li>
           <% end %>
         </ul>
-
+      <div id="detail", class="text-center"> <%= link_to "View Detail", property_path,  class: "btn btn-gradient", id: "detail" %></div>
   <% end %>
   </div>
 </div>

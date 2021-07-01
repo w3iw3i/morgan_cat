@@ -2,13 +2,9 @@
   <h2>Portfolio Optimization</h2>
 </div>
 
-<div class="mt-4">
-  <p>We compare your current portfolio of stocks, bonds and cash against low and moderate-risk portfolios comprising benchmark indexes.
-  Stocks are benchmarked against the <strong> FTSE All-World index </strong>, comprising 90 - 95% of investable world market capitalization. Bonds are benchmarked
-  against the <strong>Barclays Global Aggregate Bond index</strong>, comprising investment-grade debt from over 25 local currency markets </p>
-</div>
-
-<br>
+<p class= "my-3">We compare your current portfolio of stocks, bonds and cash against low and moderate-risk portfolios comprising benchmark indexes.
+Stocks are benchmarked against the <strong> FTSE All-World index </strong>, comprising 90 - 95% of investable world market capitalization. Bonds are benchmarked
+against the <strong>Barclays Global Aggregate Bond index</strong>, comprising investment-grade debt from over 25 local currency markets </p>
 
 <div class="text-center">
   <h3 id="sub-header">Projection Comparison</h3>
@@ -44,7 +40,7 @@
       %>
       <%=
           line_chart data,
-          colors: ["#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600"],
+          colors: ["#ffa600", "#004c6d", "#7aa6c2"],
           ytitle: "Net Worth($)", min:0, thousands: ",", loading: "Loading...",
           library: {
             yAxis: {
