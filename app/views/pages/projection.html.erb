@@ -4,9 +4,21 @@
       <h3 id="sub-header">Refine</h3>
       <% if user_signed_in? %>
         <div class="add-buttons justify-content-center mt-5">
-          <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
-          <p><%= link_to "Add Expenses", expenses_path, class: 'btn btn-gradient' %></p>
-          <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
+          <% if Asset.exists?(user_id: @user.id) %>
+            <p><%= link_to "Edit Assets", assets_path, class: 'btn btn-gradient' %></p>
+          <% else %>
+            <p><%= link_to "Add Assets", assets_path, class: 'btn btn-gradient' %></p>
+          <% end %>
+          <% if Expense.exists?(user_id: @user.id) %>
+            <p><%= link_to "Edit Expenses", expenses_path, class: 'btn btn-gradient' %></p>
+          <% else %>
+            <p><%= link_to "Add Expenses", expenses_path, class: 'btn btn-gradient' %></p>
+          <% end %>
+          <% if Property.exists?(user_id: @user.id) %>
+            <p><%= link_to "Edit Properties", properties_path, class: 'btn btn-gradient' %></p>
+          <% else %>
+            <p><%= link_to "Add Properties", properties_path, class: 'btn btn-gradient' %></p>
+          <% end %>
         </div>
       <% else %>
         <div class="landing-btn justify-content-center mt-5">
