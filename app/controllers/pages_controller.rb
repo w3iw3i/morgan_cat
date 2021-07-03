@@ -77,7 +77,7 @@ class PagesController < ApplicationController
         @property_cagr = ((1+ @rate_of_increase)**(1.to_f / @period) - 1) * 100
 
         @property_roi = ((@property_data[0][@period-1][1] - @loan_outstanding_cumulative[0][1])*100)/(@loan_outstanding_cumulative[0][1])
-        @property_roi_annual = @property_roi / @period
+        @property_roi_annual = @property_roi.to_f / @period
         @net_property_value.each_with_index do |year_pair, index|
           if @property_data[0][index][1] * 2 > year_pair[1]
             @half_owned_year = year_pair[0]
